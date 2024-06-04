@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Components
+
+@if (Script != null)
+{
+    <div>
+        @Script
+    </div>
+}
+
+@code {
+
+    #region Parameter
+
+    [Parameter]
+    public string InputPosition { get; set; } = "top";
+    [Parameter]
+    public string Term { get; set; } = "ChapterOne";
+    [Parameter]
+    public string Repo { get; set; } = "TomJerry1940/Comment";
+    [Parameter]
+    public string RepoId { get; set; } = "R_kgDOMEw5Ng";
+    #endregion
+
+
+    public string Category { get; set; } = "General";
+    public string CategoryId { get; set; } = "DIC_kwDOMEw5Ns4Cf2YW";
+    public string Mapping { get; set; } = "specific";
+    public bool ReactionsEnabled { get; set; } = true;
+    public string Theme { get; set; } = "light";
+    public string Language { get; set; } = "en";
+    public string Loading { get; set; } = "lazy";
+    public string EmitMetadata { get; set; } = "0";
+    public string Strict { get; set; } = "0";
+
+    private RenderFragment Script { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Script = new RenderFragment(b =>
+        {
+            b.OpenElement(0, "script");
+            b.AddMultipleAttributes(1, new List<KeyValuePair<string, object>>()
+                    {
+                    new KeyValuePair<string, object>("src", "https://giscus.app/client.js"),
+                    new KeyValuePair<string, object>("data-repo", Repo),
+                    new KeyValuePair<string, object>("data-repo-id", RepoId),
+                    new KeyValuePair<string, object>("data-category", Category),
+                    new KeyValuePair<string, object>("data-category-id", CategoryId),
+                    new KeyValuePair<string, object>("data-mapping", Mapping),
+                    new KeyValuePair<string, object>("data-term", Term),
+                    new KeyValuePair<string, object>("data-strict", Strict),
+                    new KeyValuePair<string, object>("data-reactions-enabled", ReactionsEnabled ? "1" : "0"),
+                    new KeyValuePair<string, object>("data-emit-metadata", EmitMetadata),
+                    new KeyValuePair<string, object>("data-input-position", InputPosition),
+                    new KeyValuePair<string, object>("data-theme", Theme),
+                    new KeyValuePair<string, object>("data-lang", Language),
+                    new KeyValuePair<string, object>("data-loading", Loading),
+                    new KeyValuePair<string, object>("crossorigin", "anonymous"),
+                    new KeyValuePair<string, object>("async", true),
+                    });
+            b.CloseElement();
+        });
+    }
+}

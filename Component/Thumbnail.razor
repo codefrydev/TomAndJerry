@@ -1,0 +1,20 @@
+﻿@inject NavigationManager nav
+
+
+<MudPaper Width="400px" MaxHeight="480px" Class="mx-1 my-2" Style="background-color:transparent" @onclick="GoTOPage">
+    <MudCard>
+        <MudCardMedia Image="image/thumbnail/episode1.png" Height="300" />
+        <MudCardContent>
+            <MudText Typo="Typo.h5">Old Paint</MudText>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+
+
+@code
+{
+    public void GoTOPage()
+    {
+        nav.NavigateTo("playmedia");
+    }
+}
