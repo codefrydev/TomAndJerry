@@ -1,11 +1,11 @@
 ﻿@inject NavigationManager nav
 
 
-<MudPaper Width="400px" MaxHeight="480px" Class="mx-1 my-2" Style="background-color:transparent" @onclick="GoTOPage">
+<MudPaper Width="400px" MaxHeight="480px" Class="mx-1 my-2" Style="background-color:transparent" >
     <MudCard>
-        <MudCardMedia Image="image/thumbnail/episode1.png" Height="300" />
+        <MudCardMedia Image="@VideoModel.Thumbnail" Height="300" />
         <MudCardContent>
-            <MudText Typo="Typo.h5">Old Paint</MudText>
+            <MudText Typo="Typo.h5">@string.Join(" ", VideoModel.Description.Split(".").Where(x=>x!="mkv").Select(x=>x))</MudText>
         </MudCardContent>
     </MudCard>
 </MudPaper>
@@ -13,8 +13,9 @@
 
 @code
 {
+    [Parameter] public Video VideoModel { get; set; }
     public void GoTOPage()
     {
-        nav.NavigateTo("playmedia");
+        nav.NavigateTo($"playmedia/{VideoModel.VideoId}");
     }
 }

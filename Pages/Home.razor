@@ -1,18 +1,25 @@
 ﻿@page "/"
 @inject NavigationManager nav
 <PageTitle>Home</PageTitle>
-<MudPaper Class="d-flex flex-wrap justify-center " Style="background-color:transparent" Elevation="0" Width="100%">
-    @for (var i = 0; i < 5; i++)
+<MudPaper 
+        Class="d-flex flex-wrap justify-center " 
+        Style="background-color:transparent" 
+        Elevation="0" 
+        Width="100%">  
+    @foreach (var item in videos)
     {
-        <Thumbnail/>
+        <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
+            <Thumbnail VideoModel="@item" /> 
+        </MudPaper>
     }
 </MudPaper> 
 
 
 @code
 {
-    public void GoTOPage()
+    List<Video> videos = Data.Videos;
+    public void GoTOPage(Video video)
     {
-        nav.NavigateTo("playmedia");
+        nav.NavigateTo($"playmedia/{video.VideoId}");
     }
 }

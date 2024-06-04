@@ -1,31 +1,57 @@
-﻿@page "/playmedia"
+﻿@page "/playmedia/{videId}"
+@inject NavigationManager nav
+<MudPaper Class="d-flex flex-wrap justify-center " Style="background-color:transparent" Elevation="0" Width="100%"> 
+    <MudGrid>
+        <MudItem xs="12" lg="9" Style="overflow:scroll; height:100vh;">
+            <div class="video-container">
+                <iframe 
+                    width="560" 
+                    height="315"
+                    src="https://drive.google.com/file/d/@($"{VideId}")/preview"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <MudList Style="background-color:lightgrey">
+                <MudListItem> 
+                    <MudText>
+                        @Data.GetVideo(VideId).Description
+                    </MudText>
+                </MudListItem>
+                <MudListItem >
+                    <MudExpansionPanel Text="Comments" >
+                        <Giscus Term="@Data.GetVideo(VideId).CommentName" />
+                    </MudExpansionPanel> 
+                </MudListItem>
+            </MudList>
+        </MudItem>
+        <MudItem xs="12" lg="3" Style="overflow:scroll; height:100vh;">
+            <MudPaper Class="d-flex flex-wrap justify-center "
+                      Style="background-color:transparent"
+                      Elevation="0"
+                      Width="100%">
+                @foreach (var item in videos)
+                {
+                    <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
+                        <Thumbnail VideoModel="@item" />
+                    </MudPaper>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid> 
+</MudPaper> 
 
-<MudGrid>
-    <MudItem xs="12" lg="9" Style="overflow-x: hidden; overflow-y: auto;">
-        <div class="video-container">
-            <iframe width="560" height="315" src="https://drive.google.com/file/d/1PTNdhnqbhzSWUCfAinIefP5cfr6Dezuw/preview" frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <MudList>
-            <MudListItem> 
-                <MudText>
-                    Video Name
-                </MudText>
-            </MudListItem>
-            <MudListItem>
-                <MudText>
-                   <Giscus/>
-                </MudText>
-            </MudListItem>
-        </MudList>
-    </MudItem>
-    <MudItem xs="12" lg="3" >
-        @for (int i = 0; i < 10; i++)
-        {
-             <Thumbnail/>
-        }
-    </MudItem>
-</MudGrid> 
+@code
+{
+    [Parameter]
+    public string VideId { get; set; }
+    List<Video> videos = Data.Videos;
+    public void GoTOPage(Video video)
+    {
+        nav.NavigateTo($"playmedia/{video.VideoId}");
+    } 
+}
 <style>
     .video-container {
         position: relative;
