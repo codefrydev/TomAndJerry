@@ -1,10 +1,32 @@
 ﻿using MudBlazor;
+using System;
 using TomAndJerry.Model;
 
 namespace TomAndJerry.DataBase
 {
     public class Data
     {
+        static Random random = new Random();
+        static List<T> SuffeledArray<T>(List<T> array)
+        {
+
+            for (int i = 0; i < array.Count; i++)
+            {
+                var randIndex = random.Next(i, array.Count);
+                var tempItem = array[randIndex];
+                array[randIndex] = array[i];
+                array[i] = tempItem;
+            }
+            return array;
+        }
+        public static Video GetVideo(string id)
+        {
+            return Videos.FirstOrDefault(x => x.VideoId == id) ?? Videos[0];
+        }
+        public static List<Video> GetRandomVideo()
+        {
+            return SuffeledArray(Videos);
+        }
         public static List<Video> Videos = [
             new Video()
             {
@@ -460,9 +482,6 @@ namespace TomAndJerry.DataBase
 
         ];
          
-        public static Video GetVideo(string id)
-        {
-            return Videos.FirstOrDefault(x => x.VideoId == id)??Videos[0];
-        }
+        
     }
 }

@@ -46,7 +46,7 @@
 {
     [Parameter]
     public string VideId { get; set; }
-    List<Video> videos = Data.Videos;
+    List<Video> videos = Data.GetRandomVideo();
     public void GoTOPage(Video video)
     {
         nav.NavigateTo($"playmedia/{video.VideoId}");
