@@ -1,25 +1,36 @@
 ﻿@page "/"
 @inject NavigationManager nav
 <PageTitle>Home</PageTitle>
-<MudPaper 
-        Class="d-flex flex-wrap justify-center " 
-        Style="background-color:transparent" 
-        Elevation="0" 
-        Width="100%">  
-    @foreach (var item in videos)
+<MudPaper Class="d-flex flex-wrap justify-center "
+          Style="background-color:transparent"
+          Elevation="0"
+          Width="100%">
+    @foreach (var item in Datas.GetRandomVideo())
     {
         <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
-            <Thumbnail VideoModel="@item" /> 
+            <Thumbnail VideoModel="@item" />
         </MudPaper>
     }
-</MudPaper> 
+
+</MudPaper>
 
 
 @code
 {
-    List<Video> videos = Data.Videos;
+
+    [Inject] public Data Datas { get; set; }
     public void GoTOPage(Video video)
     {
-        nav.NavigateTo($"playmedia/{video.VideoId}");
+        nav.NavigateTo($"playmedia/{video.CommentName}");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Datas.OnChange += StateHasChanged;
+        await Datas.InitializeAsync();
+    }
+
+    public void Dispose()
+    {
+        Datas.OnChange -= StateHasChanged;
     }
 }
