@@ -1,12 +1,12 @@
-﻿@page "/"
+﻿@page "/Search/{searchterm}"
 @inject NavigationManager nav
 @inject Data Datas
-<PageTitle>Home</PageTitle>
-<MudPaper Class="d-flex flex-wrap justify-center "
+
+<MudPaper Class="d-flex flex-wrap justify-center"
           Style="background-color:transparent"
           Elevation="0"
-          Width="100%">
-    @foreach (var item in Datas.VideosData)
+          Width="100%" > 
+    @foreach (var item in Datas.FilteredData)
     {
         <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
             <Thumbnail VideoModel="@item" />
@@ -16,21 +16,24 @@
 </MudPaper>
 
 
-@code
-{
-     
-    public void GoTOPage(Video video)
-    {
-        nav.NavigateTo($"playmedia/{video.CommentName}");
-    }
+@code 
+{ 
+    [Parameter] public string searchterm { get; set; } = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         Datas.OnChange += StateHasChanged;
+
         await Datas.InitializeAsync();
+        //await Datas.GetFilteredVideos(searchterm);
     }
 
     public void Dispose()
     {
         Datas.OnChange -= StateHasChanged;
+    }
+    public void GoTOPage(Video video)
+    { 
+        nav.NavigateTo($"playmedia/{video.CommentName}");
     }
 }

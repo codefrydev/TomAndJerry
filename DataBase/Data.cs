@@ -1,5 +1,6 @@
 ﻿using MudBlazor;
 using System;
+using System.Net;
 using TomAndJerry.Model;
 
 namespace TomAndJerry.DataBase
@@ -23,6 +24,19 @@ namespace TomAndJerry.DataBase
 
         public bool isDataFetced = false;
 
+        private List<Video> _filteredData = []; 
+
+        public List<Video> FilteredData
+        {
+            get => _filteredData; 
+            set 
+            { 
+                _filteredData = value;
+                NotifyDataChanged();
+            }
+        }
+
+
         #region permanentUri
         static Random random = new Random();
         static string EpisodeNameUri = "https://raw.githubusercontent.com/TomJerry1940/Database/main/EpisodeNameList.txt";
@@ -38,7 +52,7 @@ namespace TomAndJerry.DataBase
                 (array[randIndex], array[i] ) = (array[i], array[randIndex]); 
             }
             return array;
-        }
+        } 
         public Video GetVideo(string id)
         {
             return VideosData.FirstOrDefault(x => x.CommentName == id || x.Description==id) ?? VideosData[0];
@@ -56,7 +70,8 @@ namespace TomAndJerry.DataBase
         }
 
         private async Task<List<Video>> FetchDataAsync()
-        { 
+        {
+            if (isDataFetced) return VideosData; 
             using var client = new HttpClient();
             var videoListString = await client.GetStringAsync(DriveVideoUri);
             var EpisodeNameString = await client.GetStringAsync(EpisodeNameUri);
@@ -68,10 +83,10 @@ namespace TomAndJerry.DataBase
                 .Split('\n').Where(x => x.Length > 0).Select(x => x.Trim()).ToList();
             var ThumbnailList = ThumbnailString
                 .Split('\n').Where(x => x.Length > 0).Select(x => x.Trim()).ToList();
-            List<Video> Videos = [];
+            VideosData = [];
             for (var i = 0; i < Math.Min(videoUriList.Count, EpisodeList.Count); i++)
             {
-                Videos.Add(
+                VideosData.Add(
                     new Video()
                     {
                         Id = i,
@@ -83,7 +98,8 @@ namespace TomAndJerry.DataBase
                     }
                );
             }
-            return Videos;
+            isDataFetced = true;
+            return VideosData;
         } 
     }
 }

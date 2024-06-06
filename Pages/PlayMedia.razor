@@ -1,9 +1,14 @@
 ﻿@page "/playmedia/{videId}"
 @inject NavigationManager nav
-<MudPaper Class="d-flex flex-wrap justify-center " Style="background-color:transparent" Elevation="0" Width="100%">
-    <MudGrid>
-        <MudItem xs="12" lg="9" Style="overflow:scroll; height:100vh;">
-            <div class="video-container">
+@inject Data Datas
+@inject IJSRuntime JS
+<MudPaper 
+    Class="d-flex flex-wrap justify-center " 
+    Style="background-color:transparent" 
+    Elevation="0" Width="100%">
+    <MudGrid Spacing="0">
+        <MudItem xs="12" lg="9" >
+            <div class="video-container ml-1">
                 <iframe width="560"
                         height="315"
                         src="@Datas.GetVideo(VideId).VideoUrl"
@@ -12,20 +17,27 @@
                         allowfullscreen>
                 </iframe>
             </div>
-            <MudList Style="background-color:lightgrey">
+            <MudList Style="background-color:lightgrey" Class="ml-1">
                 <MudListItem>
                     <MudText>
                         @Datas.GetVideo(VideId).Description
                     </MudText>
                 </MudListItem>
-                <MudListItem>
-                    <MudExpansionPanel Text="Comments">
-                        <Giscus Term="@Datas.GetVideo(VideId).CommentName" />
-                    </MudExpansionPanel>
+                <MudListItem> 
+                    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                        <MudTabPanel Text="Giscuss"> 
+                            <Giscus Term="@Datas.GetVideo(VideId).CommentName" />
+                        </MudTabPanel> 
+                        <MudTabPanel 
+                            Text="Disqus" 
+                            OnClick="@(()=>LoadGiscud(Datas.GetVideo(VideId).CommentName))">
+                            <div id="disqus_thread"></div>
+                        </MudTabPanel>
+                    </MudTabs>
                 </MudListItem>
             </MudList>
         </MudItem>
-        <MudItem xs="12" lg="3" Style="overflow:scroll; height:100vh;">
+        <MudItem xs="12" lg="3">
             <MudPaper Class="d-flex flex-wrap justify-center "
                       Style="background-color:transparent"
                       Elevation="0"
@@ -43,12 +55,17 @@
 
 @code
 {
-    [Parameter] public string VideId { get; set; }
-    [Inject] public Data Datas { get; set; }
-    public void GoTOPage(Video video)
+    [Parameter] public string VideId { get; set; } = string.Empty; 
+    public async Task GoTOPage(Video video)
     {
+        await LoadGiscud(video.CommentName);
         nav.NavigateTo($"playmedia/{video.CommentName}");
+    } 
+    async Task LoadGiscud(string id)
+    {  
+        await JS.InvokeVoidAsync("loadDisqus", nav.Uri, id);
     }
+
     protected override async Task OnInitializedAsync()
     {
         Datas.OnChange += StateHasChanged;
