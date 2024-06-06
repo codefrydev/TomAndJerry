@@ -1,13 +1,10 @@
-﻿using MudBlazor;
-using System;
-using System.Net;
-using TomAndJerry.Model;
+﻿using TomAndJerry.Model;
 
 namespace TomAndJerry.DataBase
 {
     public class Data
     {
-        public event Action OnChange; 
+        public event Action OnChange;
         private void NotifyDataChanged() => OnChange?.Invoke();
 
         private List<Video> _data = [];
@@ -24,13 +21,13 @@ namespace TomAndJerry.DataBase
 
         public bool isDataFetced = false;
 
-        private List<Video> _filteredData = []; 
+        private List<Video> _filteredData = [];
 
         public List<Video> FilteredData
         {
-            get => _filteredData; 
-            set 
-            { 
+            get => _filteredData;
+            set
+            {
                 _filteredData = value;
                 NotifyDataChanged();
             }
@@ -48,16 +45,16 @@ namespace TomAndJerry.DataBase
 
             for (int i = 0; i < array.Count; i++)
             {
-                var randIndex = random.Next(i, array.Count); 
-                (array[randIndex], array[i] ) = (array[i], array[randIndex]); 
+                var randIndex = random.Next(i, array.Count);
+                (array[randIndex], array[i]) = (array[i], array[randIndex]);
             }
             return array;
-        } 
+        }
         public Video GetVideo(string id)
         {
-            return VideosData.FirstOrDefault(x => x.CommentName == id || x.Description==id) ?? VideosData[0];
+            return VideosData.FirstOrDefault(x => x.CommentName == id || x.Description == id) ?? VideosData[0];
         }
-        public  List<Video> GetRandomVideo()
+        public List<Video> GetRandomVideo()
         {
             return SuffeledArray(VideosData);
         }
@@ -71,7 +68,7 @@ namespace TomAndJerry.DataBase
 
         private async Task<List<Video>> FetchDataAsync()
         {
-            if (isDataFetced) return VideosData; 
+            if (isDataFetced) return VideosData;
             using var client = new HttpClient();
             var videoListString = await client.GetStringAsync(DriveVideoUri);
             var EpisodeNameString = await client.GetStringAsync(EpisodeNameUri);
@@ -100,6 +97,6 @@ namespace TomAndJerry.DataBase
             }
             isDataFetced = true;
             return VideosData;
-        } 
+        }
     }
 }

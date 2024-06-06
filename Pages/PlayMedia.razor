@@ -2,6 +2,8 @@
 @inject NavigationManager nav
 @inject Data Datas
 @inject IJSRuntime JS
+
+<PageTitle>@Datas.GetVideo(VideId).CommentName.Substring(6)</PageTitle>
 <MudPaper 
     Class="d-flex flex-wrap justify-center " 
     Style="background-color:transparent" 
