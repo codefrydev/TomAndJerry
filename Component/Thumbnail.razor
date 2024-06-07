@@ -13,7 +13,7 @@
 
 @code
 {
-    [Parameter] public Video VideoModel { get; set; }
+    [Parameter] public Video VideoModel { get; set; } = new();
     public void GoTOPage()
     {
         nav.NavigateTo($"playmedia/{VideoModel.VideoId}");

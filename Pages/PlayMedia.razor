@@ -26,16 +26,28 @@
                     </MudText>
                 </MudListItem>
                 <MudListItem> 
-                    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-                        <MudTabPanel Text="Giscuss"> 
-                            <Giscus Term="@Datas.GetVideo(VideId).CommentName" />
-                        </MudTabPanel> 
-                        <MudTabPanel 
-                            Text="Disqus" 
-                            OnClick="@(()=>LoadGiscud(Datas.GetVideo(VideId).CommentName))">
-                            <div id="disqus_thread"></div>
-                        </MudTabPanel>
-                    </MudTabs>
+                    @if(show)
+                    {
+                        <MudButton 
+                            OnClick="ShowComment" 
+                            Color="Color.Secondary" 
+                            Variant="Variant.Outlined">
+                            Show Comment
+                        </MudButton>
+                    }
+                    else
+                    { 
+                        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                            <MudTabPanel Text="Giscuss"> 
+                                <Giscus Term="@Datas.GetVideo(VideId).CommentName" />
+                            </MudTabPanel> 
+                            <MudTabPanel 
+                                Text="Disqus" 
+                                OnClick="@(()=>LoadGiscud(Datas.GetVideo(VideId).CommentName))">
+                                <div id="disqus_thread"></div>
+                            </MudTabPanel>
+                        </MudTabs>
+                    }
                 </MudListItem>
             </MudList>
         </MudItem>
@@ -57,6 +69,7 @@
 
 @code
 {
+    bool show = true;
     [Parameter] public string VideId { get; set; } = string.Empty; 
     public async Task GoTOPage(Video video)
     {
@@ -67,11 +80,15 @@
     {  
         await JS.InvokeVoidAsync("loadDisqus", nav.Uri, id);
     }
-
-    protected override async Task OnInitializedAsync()
+    void ShowComment()
     {
+        show = false;
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    { 
         Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
+        //await Datas.InitializeAsync();
     }
 
     public void Dispose()

@@ -1,0 +1,47 @@
+﻿@inject NavigationManager nav
+@inject IDialogService DialogService
+<MudPaper Class="d-flex flex-wrap justify-center "
+          Style="background-color:transparent"
+          Elevation="0"
+          Width="100%"> 
+        <MudImage  
+            Src="Tom.png" 
+            Alt="404 Error page" 
+            Class="rounded-lg imageHight"  
+            @onclick="Home"  
+            /> 
+</MudPaper>  
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions"> 
+    <DialogContent> 
+        <MudImage Src="Tom.png"
+                  Alt="404 Error page"
+                  Class="rounded-lg"
+                  Fluid=true
+                  @onclick="Home" />
+        <MudButton Variant="Variant.Outlined" 
+        Color="Color.Secondary"
+                   OnClick="Home"
+                   Class="px-10 " FullWidth=true>Go Home</MudButton>
+    </DialogContent> 
+</MudDialog>
+@code {
+    private bool visible = true;   
+    private DialogOptions dialogOptions = new() { FullWidth = true, ClassBackground = "my-custom-class" };
+    void Home()
+    {
+        visible = false;
+        nav.NavigateTo($"");
+    }
+}
+
+<style>
+    .imageHight
+    {
+        height:80%;
+        width:80%;
+    }
+
+    .my-custom-class {
+        backdrop-filter: blur(10px);
+    }
+</style>

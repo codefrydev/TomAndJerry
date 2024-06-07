@@ -1,4 +1,8 @@
-﻿<MudAppBar 
+﻿@inject Data Datas
+@inject NavigationManager nav
+@inject IJSRuntime JSRuntime
+@inject Data Datas
+<MudAppBar 
     Color="Color.Secondary" 
     Fixed="true" 
     Dense="true" 
@@ -28,26 +32,10 @@
         </div>
     </MudPaper>
 </MudAppBar>
-
-
-
-@inject Data Datas
-@inject NavigationManager nav
-@inject IJSRuntime JSRuntime
-@inject Data Datas
-
+ 
 @code {     
     public string FindData = string.Empty;
-    protected override async Task OnInitializedAsync()
-    {
-        Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
-    }
-
-    public void Dispose()
-    {
-        Datas.OnChange -= StateHasChanged;
-    }
+    
     void GoToHomePage()
     { 
         nav.NavigateTo(""); 
@@ -86,6 +74,18 @@
     }
 }
  ﻿
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        Datas.OnChange += StateHasChanged;
+        await Datas.InitializeAsync();
+    }
+
+    public void Dispose()
+    {
+        Datas.OnChange -= StateHasChanged;
+    }
+}
 <style>
     .InputContainer {
         height: 40px;
