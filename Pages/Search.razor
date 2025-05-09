@@ -1,5 +1,5 @@
 ﻿@page "/Search/{searchterm}"
-@inject NavigationManager Nav
+@inject NavigationManager nav
 @inject Data Datas
 
 <PageTitle>Search</PageTitle>
@@ -9,7 +9,7 @@
           Width="100%" > 
     @foreach (var item in Datas.FilteredData)
     {
-        <MudPaper @onclick="()=>GoToPage(item)" Style="background-color:transparent" Elevation="0">
+        <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
             <Thumbnail VideoModel="@item" />
         </MudPaper>
     }
@@ -19,7 +19,7 @@
 
 @code 
 { 
-    [Parameter] public string Searchterm { get; set; } = string.Empty;
+    [Parameter] public string searchterm { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,8 +33,8 @@
     {
         Datas.OnChange -= StateHasChanged;
     }
-    public void GoToPage(Video video)
+    public void GoTOPage(Video video)
     { 
-        Nav.NavigateTo($"playmedia/{video.Id}");
+        nav.NavigateTo($"playmedia/{video.Id}");
     }
 }

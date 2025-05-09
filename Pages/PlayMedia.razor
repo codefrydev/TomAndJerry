@@ -1,7 +1,7 @@
 ﻿@page "/playmedia/{videId}"
-@inject NavigationManager Nav
+@inject NavigationManager nav
 @inject Data Datas
-@inject IJSRuntime Js
+@inject IJSRuntime JS
 
 <PageTitle>@Datas.GetVideo(VideId).CommentName.Substring(6)</PageTitle>
 <MudPaper 
@@ -26,7 +26,7 @@
                     </MudText>
                 </MudListItem>
                 <MudListItem> 
-                    @if(_show)
+                    @if(show)
                     {
                         <MudButton 
                             OnClick="ShowComment" 
@@ -58,7 +58,7 @@
                       Width="100%">
                 @foreach (var item in Datas.GetRandomVideo())
                 {
-                    <MudPaper @onclick="()=>GoToPage(item)" Style="background-color:transparent" Elevation="0">
+                    <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
                         <Thumbnail VideoModel="@item" />
                     </MudPaper>
                 }
@@ -67,6 +67,35 @@
     </MudGrid>
 </MudPaper>
 
+@code
+{
+    bool show = true;
+    [Parameter] public string VideId { get; set; } = string.Empty; 
+    public async Task GoTOPage(Video video)
+    {
+        await LoadGiscud(video.CommentName);
+        nav.NavigateTo($"playmedia/{video.Id}");
+    } 
+    async Task LoadGiscud(string id)
+    {  
+        await JS.InvokeVoidAsync("loadDisqus", nav.Uri, id);
+    }
+    void ShowComment()
+    {
+        show = false;
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    { 
+        Datas.OnChange += StateHasChanged;
+        //await Datas.InitializeAsync();
+    }
+
+    public void Dispose()
+    {
+        Datas.OnChange -= StateHasChanged;
+    }
+}
 <style>
     .video-container {
         position: relative;

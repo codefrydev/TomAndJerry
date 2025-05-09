@@ -6,32 +6,32 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 8.0.x
-        
-    - name: Publish .NET Core Project
-      run: dotnet publish TomAndJerry.csproj -c Release -o release --nologo
-    
-    - name: Change
-      run: sed -i 's/<base href="\/" \/>/<base href="\/TomAndJerry\/" \/>/g' release/wwwroot/index.html
-    
-    - name: Copy index.html to 404.html
-      run: cp release/wwwroot/index.html release/wwwroot/404.html
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    # (Allow files and folders starting with an underscore)
-    - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
-      
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish Blazor WebAssembly project
+        run: dotnet publish TomAndJerry.csproj -c Release -o release --nologo
+
+      - name: Update <base> href for GitHub Pages
+        run: sed -i 's|<base href="/" />|<base href="/TomAndJerry/" />|' release/wwwroot/index.html
+
+      - name: Add 404.html (for GitHub Pages SPA fallback)
+        run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+      - name: Add .nojekyll file
+        run: touch release/wwwroot/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: release/wwwroot
