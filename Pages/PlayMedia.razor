@@ -67,35 +67,6 @@
     </MudGrid>
 </MudPaper>
 
-@code
-{
-    bool _show = true;
-    [Parameter] public string VideId { get; set; } = string.Empty; 
-    public async Task GoToPage(Video video)
-    {
-        await LoadGiscud(video.CommentName);
-        Nav.NavigateTo($"playmedia/{video.Id}");
-    } 
-    async Task LoadGiscud(string id)
-    {  
-        await Js.InvokeVoidAsync("loadDisqus", Nav.Uri, id);
-    }
-    void ShowComment()
-    {
-        _show = false;
-        StateHasChanged();
-    }
-    protected override async Task OnInitializedAsync()
-    { 
-        Datas.OnChange += StateHasChanged;
-        //await Datas.InitializeAsync();
-    }
-
-    public void Dispose()
-    {
-        Datas.OnChange -= StateHasChanged;
-    }
-}
 <style>
     .video-container {
         position: relative;
