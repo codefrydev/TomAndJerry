@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject NavigationManager nav
+@inject NavigationManager Nav
 @inject Data Datas
 <PageTitle>Home</PageTitle>
 <MudPaper Class="d-flex flex-wrap justify-center "
@@ -8,29 +8,9 @@
           Width="100%">
     @foreach (var item in Datas.VideosData)
     {
-        <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
-            <Thumbnail VideoModel="@item" />
+        <MudPaper @onclick="()=>GoToPage(item)" Style="background-color:transparent" Elevation="0">
+            <Thumbnail VideoModel="@item"/>
         </MudPaper>
     }
 
 </MudPaper>
-
-
-@code
-{
-     
-    public void GoTOPage(Video video)
-    {
-        nav.NavigateTo($"playmedia/{video.CommentName}");
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        Datas.OnChange += StateHasChanged;
-        //await Datas.InitializeAsync();
-    }
-
-    public void Dispose()
-    {
-        Datas.OnChange -= StateHasChanged;
-    }
-}

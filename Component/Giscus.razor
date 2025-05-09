@@ -11,14 +11,11 @@
 
     #region Parameter
 
-    [Parameter]
-    public string InputPosition { get; set; } = "top";
-    [Parameter]
-    public string Term { get; set; } = "ChapterOne";
-    [Parameter]
-    public string Repo { get; set; } = "TomJerry1940/Comment";
-    [Parameter]
-    public string RepoId { get; set; } = "R_kgDOMEw5Ng";
+    [Parameter] public string InputPosition { get; set; } = "top";
+    [Parameter] public string Term { get; set; } = "ChapterOne";
+    [Parameter] public string Repo { get; set; } = "TomJerry1940/Comment";
+    [Parameter] public string RepoId { get; set; } = "R_kgDOMEw5Ng";
+
     #endregion
 
 
@@ -39,26 +36,27 @@
         Script = new RenderFragment(b =>
         {
             b.OpenElement(0, "script");
-            b.AddMultipleAttributes(1, new List<KeyValuePair<string, object>>()
-                    {
-                    new KeyValuePair<string, object>("src", "https://giscus.app/client.js"),
-                    new KeyValuePair<string, object>("data-repo", Repo),
-                    new KeyValuePair<string, object>("data-repo-id", RepoId),
-                    new KeyValuePair<string, object>("data-category", Category),
-                    new KeyValuePair<string, object>("data-category-id", CategoryId),
-                    new KeyValuePair<string, object>("data-mapping", Mapping),
-                    new KeyValuePair<string, object>("data-term", Term),
-                    new KeyValuePair<string, object>("data-strict", Strict),
-                    new KeyValuePair<string, object>("data-reactions-enabled", ReactionsEnabled ? "1" : "0"),
-                    new KeyValuePair<string, object>("data-emit-metadata", EmitMetadata),
-                    new KeyValuePair<string, object>("data-input-position", InputPosition),
-                    new KeyValuePair<string, object>("data-theme", Theme),
-                    new KeyValuePair<string, object>("data-lang", Language),
-                    new KeyValuePair<string, object>("data-loading", Loading),
-                    new KeyValuePair<string, object>("crossorigin", "anonymous"),
-                    new KeyValuePair<string, object>("async", true),
-                    });
+            b.AddMultipleAttributes(1, new List<KeyValuePair<string, object>>
+            {
+                new("src", "https://giscus.app/client.js"),
+                new("data-repo", Repo),
+                new("data-repo-id", RepoId),
+                new("data-category", Category),
+                new("data-category-id", CategoryId),
+                new("data-mapping", Mapping),
+                new("data-term", Term),
+                new("data-strict", Strict),
+                new("data-reactions-enabled", ReactionsEnabled ? "1" : "0"),
+                new("data-emit-metadata", EmitMetadata),
+                new("data-input-position", InputPosition),
+                new("data-theme", Theme),
+                new("data-lang", Language),
+                new("data-loading", Loading),
+                new("crossorigin", "anonymous"),
+                new("async", true)
+            });
             b.CloseElement();
         });
     }
+
 }

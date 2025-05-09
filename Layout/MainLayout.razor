@@ -1,11 +1,22 @@
 ﻿@inherits LayoutComponentBase
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
-
-<MudLayout>
-    <AppBar/>
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+<ErrorBoundary>
+    <ChildContent>
+        <MudLayout>
+            <AppBar/>
+            <MudMainContent>
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </ChildContent>
+    <ErrorContent>
+        <MudLayout>
+            <AppBar/>
+            <MudMainContent>
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </ErrorContent>
+</ErrorBoundary>
