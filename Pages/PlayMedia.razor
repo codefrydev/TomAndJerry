@@ -4,12 +4,12 @@
 @inject IJSRuntime Js
 
 <PageTitle>@Datas.GetVideo(VideId).CommentName.Substring(6)</PageTitle>
-<MudPaper
-    Class="d-flex flex-wrap justify-center "
-    Style="background-color:transparent"
+<MudPaper 
+    Class="d-flex flex-wrap justify-center " 
+    Style="background-color:transparent" 
     Elevation="0" Width="100%">
     <MudGrid Spacing="0">
-        <MudItem xs="12" lg="9">
+        <MudItem xs="12" lg="9" >
             <div class="video-container ml-1">
                 <iframe width="560"
                         height="315"
@@ -25,25 +25,25 @@
                         @Datas.GetVideo(VideId).Description
                     </MudText>
                 </MudListItem>
-                <MudListItem>
-                    @if (_show)
+                <MudListItem> 
+                    @if(_show)
                     {
-                        <MudButton
-                            OnClick="ShowComment"
-                            Color="Color.Secondary"
+                        <MudButton 
+                            OnClick="ShowComment" 
+                            Color="Color.Secondary" 
                             Variant="Variant.Outlined">
                             Show Comment
                         </MudButton>
                     }
                     else
-                    {
+                    { 
                         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-                            <MudTabPanel Text="Giscuss">
-                                <Giscus Term="@Datas.GetVideo(VideId).CommentName"/>
-                            </MudTabPanel>
-                            <MudTabPanel
-                                Text="Disqus"
-                                OnClick="@(() => LoadGiscud(Datas.GetVideo(VideId).CommentName))">
+                            <MudTabPanel Text="Giscuss"> 
+                                <Giscus Term="@Datas.GetVideo(VideId).CommentName" />
+                            </MudTabPanel> 
+                            <MudTabPanel 
+                                Text="Disqus" 
+                                OnClick="@(()=>LoadGiscud(Datas.GetVideo(VideId).CommentName))">
                                 <div id="disqus_thread"></div>
                             </MudTabPanel>
                         </MudTabs>
@@ -59,13 +59,43 @@
                 @foreach (var item in Datas.GetRandomVideo())
                 {
                     <MudPaper @onclick="()=>GoToPage(item)" Style="background-color:transparent" Elevation="0">
-                        <Thumbnail VideoModel="@item"/>
+                        <Thumbnail VideoModel="@item" />
                     </MudPaper>
                 }
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudPaper>
+
+@code
+{
+    bool _show = true;
+    [Parameter] public string VideId { get; set; } = string.Empty; 
+    public async Task GoToPage(Video video)
+    {
+        await LoadGiscud(video.CommentName);
+        Nav.NavigateTo($"playmedia/{video.Id}");
+    } 
+    async Task LoadGiscud(string id)
+    {  
+        await Js.InvokeVoidAsync("loadDisqus", Nav.Uri, id);
+    }
+    void ShowComment()
+    {
+        _show = false;
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    { 
+        Datas.OnChange += StateHasChanged;
+        //await Datas.InitializeAsync();
+    }
+
+    public void Dispose()
+    {
+        Datas.OnChange -= StateHasChanged;
+    }
+}
 <style>
     .video-container {
         position: relative;
@@ -73,13 +103,13 @@
         height: 0;
     }
 
-    .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
     body {
         overflow-x: hidden;
@@ -88,7 +118,7 @@
         scrollbar-width: none; /* Firefox */
     }
 
-    body::-webkit-scrollbar {
-        display: none;
-    }
+        body::-webkit-scrollbar {
+            display: none;
+        }
 </style>
