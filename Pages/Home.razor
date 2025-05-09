@@ -9,7 +9,7 @@
     @foreach (var item in Datas.VideosData)
     {
         <MudPaper @onclick="()=>GoTOPage(item)" Style="background-color:transparent" Elevation="0">
-            <Thumbnail VideoModel="@item" />
+            <Thumbnail VideoModel="@item"/>
         </MudPaper>
     }
 
@@ -18,11 +18,12 @@
 
 @code
 {
-     
+
     public void GoTOPage(Video video)
     {
         nav.NavigateTo($"playmedia/{video.Id}");
     }
+
     protected override async Task OnInitializedAsync()
     {
         Datas.OnChange += StateHasChanged;

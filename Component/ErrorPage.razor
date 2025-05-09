@@ -3,42 +3,45 @@
 <MudPaper Class="d-flex flex-wrap justify-center "
           Style="background-color:transparent"
           Elevation="0"
-          Width="100%"> 
-        <MudImage  
-            Src="Tom.png" 
-            Alt="404 Error page" 
-            Class="rounded-lg imageHight"  
-            @onclick="Home"  
-            /> 
-</MudPaper>  
-<MudDialog @bind-IsVisible="_visible" Options="_dialogOptions"> 
-    <DialogContent> 
+          Width="100%">
+    <MudImage
+        Src="Tom.png"
+        Alt="404 Error page"
+        Class="rounded-lg imageHight"
+        @onclick="Home"
+    />
+</MudPaper>
+<MudDialog @bind-IsVisible="_visible" Options="_dialogOptions">
+    <DialogContent>
         <MudImage Src="Tom.png"
                   Alt="404 Error page"
                   Class="rounded-lg"
-                  Fluid=true
-                  @onclick="Home" />
-        <MudButton Variant="Variant.Outlined" 
-        Color="Color.Secondary"
+                  Fluid="true"
+                  @onclick="Home"/>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Secondary"
                    OnClick="Home"
-                   Class="px-10 " FullWidth=true>Go Home</MudButton>
-    </DialogContent> 
+                   Class="px-10 " FullWidth="true">Go Home
+        </MudButton>
+    </DialogContent>
 </MudDialog>
+
 @code {
-    private bool _visible = true;   
+    private bool _visible = true;
     private DialogOptions _dialogOptions = new() { FullWidth = true, ClassBackground = "my-custom-class" };
+
     void Home()
     {
         _visible = false;
         Nav.NavigateTo($"");
     }
+
 }
 
 <style>
-    .imageHight
-    {
-        height:80%;
-        width:80%;
+    .imageHight {
+        height: 80%;
+        width: 80%;
     }
 
     .my-custom-class {

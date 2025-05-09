@@ -4,9 +4,9 @@
 
 ## Some How Shed Command is not changing based address in github action
 
-> Tip To Fix this Issue Is 
-    
-1) Before Pushing To Github Just add Repo Name in Index Htmls Like 
+> Tip To Fix this Issue Is
+
+1) Before Pushing To Github Just add Repo Name in Index Htmls Like
     ```
    <base href="/TomAndJerry/" />
    ```
