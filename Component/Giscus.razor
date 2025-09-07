@@ -29,7 +29,7 @@
     public string EmitMetadata { get; set; } = "0";
     public string Strict { get; set; } = "0";
 
-    private RenderFragment Script { get; set; }
+    private RenderFragment Script { get; set; } = null!;
 
     protected override void OnParametersSet()
     {

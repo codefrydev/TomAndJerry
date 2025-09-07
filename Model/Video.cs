@@ -2,7 +2,7 @@
 
 public class Video
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string Thumbnail { get; set; } = string.Empty;
     public string CommentName { get; set; } = string.Empty;
 

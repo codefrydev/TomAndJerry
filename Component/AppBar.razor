@@ -1,4 +1,5 @@
-﻿@inject Data Datas
+﻿@using TomAndJerry.Services
+@inject IStateService StateService
 @inject NavigationManager nav
 @inject IJSRuntime JSRuntime
 
@@ -26,22 +27,7 @@
             
             <!-- Center Section - Search -->
             <div class="flex-1 max-w-2xl mx-8">
-                <div class="relative">
-                    <div class="flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow">
-                        <input type="text"
-                               name="text"
-                               @bind-value="@FindData"
-                               class="flex-1 px-4 py-2 text-sm border-0 rounded-l-full focus:outline-none focus:ring-0"
-                               placeholder="Search Tom & Jerry episodes...">
-                        
-                        <button class="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-r-full transition-colors" 
-                                @onclick="GoTOPage">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+                <RealTimeSearch />
             </div>
             
             <!-- Right Section -->
@@ -49,14 +35,14 @@
                 <!-- Stats -->
                 <div class="hidden md:flex items-center space-x-4 text-sm text-gray-600">
                     <div class="text-center">
-                        @if (Datas.VideosData.Count == 0)
+                        @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
                         {
                             <div class="h-5 bg-gray-200 rounded w-8 mx-auto mb-1 skeleton"></div>
                             <div class="text-xs text-gray-500">Episodes</div>
                         }
                         else
                         {
-                            <div class="font-semibold text-gray-900">@Datas.VideosData.Count</div>
+                            <div class="font-semibold text-gray-900">@StateService.CurrentVideos.Count()</div>
                             <div class="text-xs text-gray-500">Episodes</div>
                         }
                     </div>
@@ -72,63 +58,21 @@
 </header>
 
 @code {
-    public string FindData = string.Empty;
-
     void GoToHomePage()
     {
         nav.NavigateTo("");
     }
 
-    public void GoTOPage()
+    protected override void OnInitialized()
     {
-        Filter();
-        if (!string.IsNullOrEmpty(FindData))
-        {
-            nav.NavigateTo($"Search/{FindData}");
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("blazorKeyPressed", DotNetObjectReference.Create(this));
-        }
-    }
-
-    [JSInvokable]
-    public void OnArrowKeyPressed(string key)
-    {
-        Filter();
-        if (key == "Enter" && !string.IsNullOrEmpty(FindData))
-        {
-            nav.NavigateTo($"Search/{FindData}");
-        }
-
-        StateHasChanged();
-    }
-
-    void Filter()
-    {
-        Datas.FilteredData = Datas.VideosData.Where(x => x.Description != null && x.Description.Contains(FindData, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-    }
-
-}
-﻿
-
-
-@code{
-
-    protected override async Task OnInitializedAsync()
-    {
-        Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
+        StateService.OnStateChanged += StateHasChanged;
     }
 
     public void Dispose()
     {
-        Datas.OnChange -= StateHasChanged;
+        StateService.OnStateChanged -= StateHasChanged;
     }
-
 }
+﻿
+
+

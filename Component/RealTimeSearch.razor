@@ -1,0 +1,147 @@
+@using TomAndJerry.Services
+@inject ISearchService SearchService
+@inject IVideoService VideoService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="relative">
+    <div class="flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow">
+        <input type="text"
+               @bind="searchTerm"
+               @bind:event="oninput"
+               @onkeydown="HandleKeyDown"
+               class="flex-1 px-4 py-2 text-sm border-0 rounded-l-full focus:outline-none focus:ring-0"
+               placeholder="Search Tom & Jerry episodes...">
+        
+        <button class="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-r-full transition-colors" 
+                @onclick="PerformSearch">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Search Suggestions Dropdown -->
+    @if (showSuggestions && searchSuggestions.Any())
+    {
+        <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+            @foreach (var suggestion in searchSuggestions)
+            {
+                <button class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        @onclick="() => SelectSuggestion(suggestion)">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <span>@suggestion</span>
+                    </div>
+                </button>
+            }
+        </div>
+    }
+    
+    <!-- Search Results Count -->
+    @if (!string.IsNullOrEmpty(searchTerm) && searchResults.Any())
+    {
+        <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-40 p-3">
+            <div class="flex items-center justify-between text-sm text-gray-600">
+                <span>@searchResults.Count() results found</span>
+                <button class="text-red-600 hover:text-red-800 font-medium"
+                        @onclick="NavigateToSearchResults">
+                    View all results
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string searchTerm = string.Empty;
+    private IEnumerable<string> searchSuggestions = Enumerable.Empty<string>();
+    private IEnumerable<TomAndJerry.Model.Video> searchResults = Enumerable.Empty<TomAndJerry.Model.Video>();
+    private bool showSuggestions = false;
+    private Timer? searchTimer;
+
+    protected override void OnInitialized()
+    {
+        SearchService.OnSearchResultsChanged += OnSearchResultsChanged;
+        
+        // Initialize search timer for debouncing
+        searchTimer = new Timer(async _ => await DebouncedSearch(), null, Timeout.Infinite, Timeout.Infinite);
+    }
+
+    private void OnSearchResultsChanged(IEnumerable<TomAndJerry.Model.Video> results)
+    {
+        searchResults = results;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DebouncedSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchSuggestions = Enumerable.Empty<string>();
+            searchResults = Enumerable.Empty<TomAndJerry.Model.Video>();
+            showSuggestions = false;
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        // Get search suggestions
+        searchSuggestions = await SearchService.GetSearchSuggestionsAsync(searchTerm);
+        
+        // Perform search
+        await SearchService.SearchAsync(searchTerm);
+        
+        showSuggestions = searchSuggestions.Any();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            PerformSearch();
+        }
+        else if (e.Key == "Escape")
+        {
+            showSuggestions = false;
+            await InvokeAsync(StateHasChanged);
+        }
+        else
+        {
+            // Debounce search input
+            searchTimer?.Change(300, Timeout.Infinite);
+        }
+    }
+
+    private void PerformSearch()
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            NavigationManager.NavigateTo($"Search/{Uri.EscapeDataString(searchTerm)}");
+        }
+        showSuggestions = false;
+    }
+
+    private void SelectSuggestion(string suggestion)
+    {
+        searchTerm = suggestion;
+        showSuggestions = false;
+        PerformSearch();
+    }
+
+    private void NavigateToSearchResults()
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            NavigationManager.NavigateTo($"Search/{Uri.EscapeDataString(searchTerm)}");
+        }
+    }
+
+    public void Dispose()
+    {
+        SearchService.OnSearchResultsChanged -= OnSearchResultsChanged;
+        searchTimer?.Dispose();
+    }
+}

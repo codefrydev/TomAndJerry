@@ -1,9 +1,11 @@
 ﻿@page "/playmedia/{videId}"
+@using TomAndJerry.Services
 @inject NavigationManager nav
-@inject Data Datas
+@inject IVideoService VideoService
+@inject IStateService StateService
 @inject IJSRuntime JS
 
-<PageTitle>@Datas.GetVideo(VideId).CommentName.Substring(6) - Tom & Jerry</PageTitle>
+<PageTitle>@(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry") - Tom & Jerry</PageTitle>
 
 <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 py-6">
@@ -14,7 +16,7 @@
                 <div class="relative bg-black rounded-xl overflow-hidden shadow-lg" style="aspect-ratio: 16/9;">
                     <iframe width="100%"
                             height="100%"
-                            src="@Datas.GetVideo(VideId).VideoUrl"
+                            src="@(currentVideo?.VideoUrl ?? "")"
                             frameborder="0"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen
@@ -25,7 +27,7 @@
                 <!-- Video Title and Info -->
                 <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                     <h1 class="text-2xl font-bold text-gray-900 leading-tight mb-4">
-                        @Datas.GetVideo(VideId).CommentName.Substring(6)
+                        @(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry Episode")
                     </h1>
                     
                     <!-- Video Stats -->
@@ -81,7 +83,7 @@
                         <button class="text-sm text-red-600 hover:text-red-800 font-medium">Show more</button>
                     </div>
                     <p class="text-sm text-gray-700 leading-relaxed">
-                        @Datas.GetVideo(VideId).Description
+                        @(currentVideo?.Description ?? "Classic Tom & Jerry episode")
                     </p>
                 </div>
                 
@@ -117,7 +119,7 @@
                                             class="@(activeTab == "giscus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                                         Giscus
                                     </button>
-                                    <button @onclick="@(() => { activeTab = "disqus"; LoadGiscud(Datas.GetVideo(VideId).CommentName); StateHasChanged(); })" 
+                                    <button @onclick="@(async () => { activeTab = "disqus"; await LoadGiscud(currentVideo?.CommentName ?? ""); StateHasChanged(); })" 
                                             class="@(activeTab == "disqus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                                         Disqus
                                     </button>
@@ -126,7 +128,7 @@
                             <div class="p-6">
                                 @if (activeTab == "giscus")
                                 {
-                                    <Giscus Term="@Datas.GetVideo(VideId).CommentName"/>
+                                    <Giscus Term="@(currentVideo?.CommentName ?? "")"/>
                                 }
                                 else
                                 {
@@ -145,7 +147,7 @@
                         <h2 class="text-lg font-semibold text-gray-900">Up next</h2>
                         <button class="text-sm text-red-600 hover:text-red-800 font-medium">Autoplay</button>
                     </div>
-                    @foreach (var item in Datas.GetRandomVideo().Take(8))
+                    @foreach (var item in randomVideos)
                     {
                         <div @onclick="()=>GoTOPage(item)" class="cursor-pointer">
                             <Thumbnail VideoModel="@item"/>
@@ -162,6 +164,9 @@
     bool show = true;
     string activeTab = "giscus";
     [Parameter] public string VideId { get; set; } = string.Empty;
+    
+    private Video? currentVideo;
+    private IEnumerable<Video> randomVideos = Enumerable.Empty<Video>();
 
     private async Task GoTOPage(Video video)
     {
@@ -182,13 +187,25 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
+        StateService.OnStateChanged += StateHasChanged;
+        
+        await StateService.SetLoadingStateAsync(true);
+        
+        try
+        {
+            await VideoService.InitializeAsync();
+            currentVideo = await VideoService.GetVideoByIdAsync(VideId);
+            randomVideos = await VideoService.GetRandomVideosAsync(8);
+        }
+        finally
+        {
+            await StateService.SetLoadingStateAsync(false);
+        }
     }
 
     public void Dispose()
     {
-        Datas.OnChange -= StateHasChanged;
+        StateService.OnStateChanged -= StateHasChanged;
     }
     
     private string GetRandomViews()

@@ -4,7 +4,7 @@ namespace TomAndJerry.DataBase;
 
 public class Data
 {
-    public event Action OnChange;
+    public event Action? OnChange;
 
     private void NotifyDataChanged()
     {

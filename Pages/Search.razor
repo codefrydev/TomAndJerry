@@ -1,6 +1,9 @@
 ﻿@page "/Search/{searchterm}"
+@using TomAndJerry.Services
 @inject NavigationManager nav
-@inject Data Datas
+@inject IVideoService VideoService
+@inject ISearchService SearchService
+@inject IStateService StateService
 
 <PageTitle>Search Results - Tom & Jerry</PageTitle>
 
@@ -24,7 +27,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            <span>@Datas.FilteredData.Count videos found</span>
+                            <span>@StateService.FilteredVideos.Count() videos found</span>
                         </div>
                     </div>
                 </div>
@@ -55,7 +58,7 @@
             <div class="bg-white rounded-xl p-1 shadow-sm border border-gray-200 inline-flex">
                 <nav class="flex space-x-1">
                     <button class="py-2 px-4 rounded-lg bg-red-600 text-white font-medium text-sm transition-all duration-200">
-                        All (@Datas.FilteredData.Count)
+                        All (@StateService.FilteredVideos.Count())
                     </button>
                     <button class="py-2 px-4 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium text-sm transition-all duration-200">
                         Videos
@@ -70,11 +73,11 @@
             </div>
         </div>
         
-        @if (Datas.FilteredData.Count > 0)
+        @if (StateService.FilteredVideos.Any())
         {
             <!-- Video Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                @foreach (var item in Datas.FilteredData)
+                @foreach (var item in StateService.FilteredVideos)
                 {
                     <Thumbnail VideoModel="@item"/>
                 }
@@ -131,13 +134,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
+        StateService.OnStateChanged += StateHasChanged;
+        
+        await StateService.SetLoadingStateAsync(true);
+        
+        try
+        {
+            await VideoService.InitializeAsync();
+            var searchResults = await SearchService.SearchAsync(searchterm);
+            await StateService.SetFilteredVideosAsync(searchResults);
+            await StateService.SetSearchTermAsync(searchterm);
+        }
+        finally
+        {
+            await StateService.SetLoadingStateAsync(false);
+        }
     }
 
     public void Dispose()
     {
-        Datas.OnChange -= StateHasChanged;
+        StateService.OnStateChanged -= StateHasChanged;
     }
 
     public void GoTOPage(Video video)

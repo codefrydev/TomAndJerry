@@ -1,6 +1,8 @@
 ﻿@page "/"
+@using TomAndJerry.Services
 @inject NavigationManager nav
-@inject Data Datas
+@inject IVideoService VideoService
+@inject IStateService StateService
 <PageTitle>Home - Tom & Jerry</PageTitle>
 
 <div class="min-h-screen bg-gray-50">
@@ -21,7 +23,7 @@
                 <!-- Stats -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-md mx-auto">
                     <div class="text-center">
-                        <div class="text-2xl font-bold mb-1">@Datas.VideosData.Count</div>
+                        <div class="text-2xl font-bold mb-1">@StateService.CurrentVideos.Count()</div>
                         <div class="text-sm text-red-200">Episodes</div>
                     </div>
                     <div class="text-center">
@@ -39,7 +41,7 @@
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 py-8">
-        @if (Datas.VideosData.Count == 0)
+        @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
         {
             <!-- Enhanced Loading State -->
             <div class="space-y-8">
@@ -182,7 +184,7 @@
                 
                 <!-- Featured Video Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                    @foreach (var item in Datas.VideosData.Take(10))
+                    @foreach (var item in StateService.CurrentVideos.Take(10))
                     {
                         <Thumbnail VideoModel="@item"/>
                     }
@@ -220,7 +222,7 @@
                 
                 <!-- All Videos Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                    @foreach (var item in Datas.VideosData)
+                    @foreach (var item in StateService.CurrentVideos)
                     {
                         <Thumbnail VideoModel="@item"/>
                     }
@@ -233,7 +235,6 @@
 
 @code
 {
-
     public void GoTOPage(Video video)
     {
         nav.NavigateTo($"playmedia/{video.Id}");
@@ -241,19 +242,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Home.razor: OnInitializedAsync called");
-        Datas.OnChange += StateHasChanged;
-        await Datas.InitializeAsync();
-        Console.WriteLine($"Home.razor: After InitializeAsync, VideosData.Count = {Datas.VideosData.Count}");
-        if (Datas.VideosData.Count > 0)
+        StateService.OnStateChanged += StateHasChanged;
+        
+        await StateService.SetLoadingStateAsync(true);
+        
+        try
         {
-            Console.WriteLine($"Home.razor: First video = {Datas.VideosData[0].Description}");
+            await VideoService.InitializeAsync();
+            var videos = await VideoService.GetAllVideosAsync();
+            await StateService.SetVideosAsync(videos);
         }
-        StateHasChanged();
+        finally
+        {
+            await StateService.SetLoadingStateAsync(false);
+        }
     }
 
     public void Dispose()
     {
-        Datas.OnChange -= StateHasChanged;
+        StateService.OnStateChanged -= StateHasChanged;
     }
 }
