@@ -7,47 +7,49 @@
 
 <PageTitle>@(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry") - Tom & Jerry</PageTitle>
 
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div class="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
+<div class="min-h-screen cartoon-bg">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-2 sm:py-4 lg:py-6">
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <!-- Main Content Area -->
-            <div class="xl:col-span-3 space-y-6">
-                <!-- Video Player -->
-                <div class="relative bg-black rounded-xl overflow-hidden shadow-lg">
-                    <div class="video-container">
-                        <iframe src="@GetEmbeddableUrl(currentVideo?.VideoUrl ?? "")"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen
-                                key="@currentVideo?.Id">
-                        </iframe>
+            <div class="xl:col-span-3 space-y-4 sm:space-y-6">
+                <!-- Video Player - Fixed Position -->
+                <div class="sticky top-2 sm:top-4 z-10">
+                    <div class="relative bg-black rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border-2 sm:border-4 border-jerry-brown">
+                        <div class="video-container">
+                            <iframe src="@GetEmbeddableUrl(currentVideo?.VideoUrl ?? "")"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    key="@currentVideo?.Id">
+                            </iframe>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Video Title and Info -->
-                <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                    <h1 class="text-3xl font-bold text-gray-900 leading-tight mb-6">
+                <div class="tom-jerry-card p-4 sm:p-6">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-cartoon text-jerry-brown leading-tight mb-4 sm:mb-6 cartoon-text">
                         @(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry Episode")
                     </h1>
                     
                     <!-- Video Stats and Actions -->
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-600">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-jerry-brown">
                             <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-4 h-4 text-cartoon-red" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold">@GetRandomViews() views</span>
+                                <span class="font-bold font-comic">@GetRandomViews() views</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-tom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
-                                <span>@GetRandomTimeAgo()</span>
+                                <span class="font-comic">@GetRandomTimeAgo()</span>
                             </div>
                             <div class="flex items-center space-x-1">
-                                <div class="flex text-yellow-400">
+                                <div class="flex text-cartoon-yellow">
                                     @for (int i = 0; i < 5; i++)
                                     {
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -55,31 +57,31 @@
                                         </svg>
                                     }
                                 </div>
-                                <span class="text-sm font-medium">4.8</span>
+                                <span class="text-sm font-bold font-comic">4.8</span>
                             </div>
                         </div>
                         
                         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-all duration-200 font-medium text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                            <button class="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-xs sm:text-sm lg:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                                 </svg>
                                 <span class="hidden sm:inline">@GetRandomLikes()</span>
                                 <span class="sm:hidden">Like</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-all duration-200 font-medium text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-red hover:bg-cartoon-pink rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                                 </svg>
                                 <span>Share</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-all duration-200 font-medium text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-yellow hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                                 </svg>
                                 <span>Save</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-all duration-200 font-medium text-gray-700 hover:text-gray-900 text-sm sm:text-base">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                                 </svg>
@@ -210,22 +212,22 @@
             
             <!-- Sidebar -->
             <div class="xl:col-span-1">
-                <div class="sticky top-6 space-y-6">
+                <div class="sticky top-6 space-y-6 max-h-screen overflow-y-auto">
                     <!-- Autoplay Toggle -->
-                    <div class="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+                    <div class="tom-jerry-card p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <div class="w-10 h-10 bg-soft-red rounded-full flex items-center justify-center cartoon-rounded">
+                                    <svg class="w-5 h-5 text-cartoon-red" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-gray-900">Up next</h3>
-                                    <p class="text-sm text-gray-600">Autoplay is on</p>
+                                    <h3 class="font-bold font-cartoon text-jerry-brown">Up next</h3>
+                                    <p class="text-sm text-jerry-dark-brown font-comic">Autoplay is on</p>
                                 </div>
                             </div>
-                            <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                            <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-cartoon-red transition-colors focus:outline-none focus:ring-2 focus:ring-cartoon-red focus:ring-offset-2 cartoon-rounded">
                                 <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6"></span>
                             </button>
                         </div>
@@ -243,7 +245,7 @@
                     
                     <!-- Load More Button -->
                     <div class="text-center">
-                        <button class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-medium transition-colors">
+                        <button class="px-6 py-3 bg-soft-blue hover:bg-cartoon-yellow text-jerry-brown rounded-full font-bold font-comic transition-colors cartoon-rounded">
                             Load more videos
                         </button>
                     </div>

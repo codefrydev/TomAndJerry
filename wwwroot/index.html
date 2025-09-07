@@ -8,13 +8,50 @@
     <base href="/TomAndJerry/"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Comic+Neue:wght@300;400;700&display=swap" rel="stylesheet"/>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'youtube-red': '#FF0000',
-                        'youtube-dark-red': '#CC0000',
+                        'tom-blue': '#60A5FA',
+                        'tom-dark-blue': '#3B82F6',
+                        'jerry-brown': '#D97706',
+                        'jerry-dark-brown': '#B45309',
+                        'cartoon-yellow': '#FEF08A',
+                        'cartoon-orange': '#FED7AA',
+                        'cartoon-red': '#F87171',
+                        'cartoon-pink': '#FBB6CE',
+                        'vintage-cream': '#FFFBEB',
+                        'vintage-beige': '#F8FAFC',
+                        'soft-blue': '#DBEAFE',
+                        'soft-red': '#FEE2E2',
+                        'soft-yellow': '#FEF3C7',
+                    },
+                    fontFamily: {
+                        'cartoon': ['Fredoka', 'cursive'],
+                        'comic': ['Comic Neue', 'cursive'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'tom-chase': 'tomChase 2s ease-in-out infinite',
+                        'jerry-dodge': 'jerryDodge 1.5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        tomChase: {
+                            '0%, 100%': { transform: 'translateX(0px) scaleX(1)' },
+                            '50%': { transform: 'translateX(10px) scaleX(-1)' },
+                        },
+                        jerryDodge: {
+                            '0%, 100%': { transform: 'translateX(0px) translateY(0px)' },
+                            '25%': { transform: 'translateX(-5px) translateY(-3px)' },
+                            '75%': { transform: 'translateX(5px) translateY(3px)' },
+                        }
                     }
                 }
             }
@@ -26,6 +63,7 @@
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -202,12 +240,118 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
-        /* Gradient text effect */
+        /* Tom & Jerry themed gradient text */
         .gradient-text {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, #60A5FA, #F87171, #FEF08A);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        /* Classic cartoon button styling */
+        .cartoon-button {
+            background: linear-gradient(145deg, #FEF08A, #FED7AA);
+            border: 3px solid #D97706;
+            border-radius: 20px;
+            box-shadow: 0 4px 0 #D97706, 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(0);
+            transition: all 0.1s ease;
+        }
+        
+        .cartoon-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #D97706, 0 5px 8px rgba(0,0,0,0.15);
+        }
+        
+        .cartoon-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #D97706, 0 3px 6px rgba(0,0,0,0.15);
+        }
+        
+        /* Tom & Jerry card styling */
+        .tom-jerry-card {
+            background: linear-gradient(145deg, #FFFBEB, #F8FAFC);
+            border: 3px solid #60A5FA;
+            border-radius: 25px;
+            box-shadow: 0 6px 15px rgba(96, 165, 250, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tom-jerry-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(96, 165, 250, 0.2);
+            border-color: #F87171;
+        }
+        
+        /* Classic cartoon background pattern */
+        .cartoon-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(254, 240, 138, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(248, 113, 113, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBEB 0%, #F8FAFC 100%);
+        }
+        
+        /* Tom & Jerry themed header */
+        .tom-jerry-header {
+            background: linear-gradient(135deg, #60A5FA 0%, #F87171 50%, #FEF08A 100%);
+            border-bottom: 4px solid #D97706;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* Character animations */
+        .tom-character {
+            animation: tomChase 3s ease-in-out infinite;
+        }
+        
+        .jerry-character {
+            animation: jerryDodge 2s ease-in-out infinite;
+        }
+        
+        /* Vintage cartoon text shadow */
+        .cartoon-text {
+            text-shadow: 0.5px 0.5px 0px #D97706, 1px 1px 0px rgba(0,0,0,0.05);
+        }
+        
+        /* Playful border radius variations */
+        .cartoon-rounded {
+            border-radius: 20px 5px 20px 5px;
+        }
+        
+        .cartoon-rounded-alt {
+            border-radius: 5px 20px 5px 20px;
+        }
+        
+        /* Mobile-specific improvements */
+        @media (max-width: 640px) {
+            .tom-jerry-card {
+                padding: 0.75rem;
+                border-radius: 15px;
+            }
+            
+            .cartoon-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .cartoon-text {
+                text-shadow: 0.25px 0.25px 0px #D97706, 0.5px 0.5px 0px rgba(0,0,0,0.05);
+            }
+            
+            .video-container {
+                border-radius: 0.75rem;
+            }
+        }
+        
+        /* Tablet-specific improvements */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .tom-jerry-card {
+                padding: 1rem;
+            }
+            
+            .cartoon-button {
+                padding: 1rem 2rem;
+            }
         }
         
         /* Floating animation for special elements */
@@ -246,7 +390,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(254, 240, 138, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(248, 113, 113, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBEB 0%, #F8FAFC 100%);
             backdrop-filter: blur(10px);
         }
     </style>
@@ -256,33 +404,50 @@
 <div id="app">
     <div class="loading">
         <div class="loadinBaba">
-            <!-- Modern Tailwind CSS Loading Animation -->
-            <div class="flex flex-col items-center space-y-6">
-                <!-- Tom & Jerry Logo -->
-                <div class="relative">
-                    <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-red-200 animate-pulse">
-                        <img src="Tom.png" alt="Tom & Jerry" class="w-full h-full object-cover"/>
+            <!-- Tom & Jerry Themed Loading Animation -->
+            <div class="flex flex-col items-center space-y-8">
+                <!-- Tom & Jerry Characters -->
+                <div class="flex items-center space-x-8">
+                    <!-- Tom Character -->
+                    <div class="tom-character">
+                        <div class="w-20 h-20 rounded-full overflow-hidden ring-4 ring-tom-blue shadow-lg">
+                            <img src="Tom.png" alt="Tom" class="w-full h-full object-cover"/>
+                        </div>
                     </div>
-                    <!-- Spinning ring around logo -->
-                    <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-red-600 border-r-red-600 animate-spin"></div>
+                    
+                    <!-- VS Text -->
+                    <div class="text-3xl font-bold cartoon-text text-jerry-brown animate-wiggle">VS</div>
+                    
+                    <!-- Jerry Character -->
+                    <div class="jerry-character">
+                        <div class="w-16 h-16 rounded-full overflow-hidden ring-4 ring-jerry-brown shadow-lg">
+                            <img src="Tom.png" alt="Jerry" class="w-full h-full object-cover"/>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Loading Text -->
-                <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-800">Tom & Jerry</h2>
-                    <p class="text-gray-600">Loading Classic Episodes...</p>
+                <div class="text-center space-y-3">
+                    <h2 class="text-4xl font-bold font-cartoon gradient-text cartoon-text">Tom & Jerry</h2>
+                    <p class="text-lg font-comic text-jerry-brown">Loading Classic Adventures...</p>
                 </div>
                 
-                <!-- Animated Dots -->
-                <div class="flex space-x-2">
-                    <div class="w-3 h-3 bg-red-600 rounded-full animate-bounce"></div>
-                    <div class="w-3 h-3 bg-red-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                    <div class="w-3 h-3 bg-red-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <!-- Animated Dots with Tom & Jerry Colors -->
+                <div class="flex space-x-3">
+                    <div class="w-4 h-4 bg-tom-blue rounded-full animate-bounce cartoon-rounded"></div>
+                    <div class="w-4 h-4 bg-cartoon-red rounded-full animate-bounce cartoon-rounded" style="animation-delay: 0.1s"></div>
+                    <div class="w-4 h-4 bg-cartoon-yellow rounded-full animate-bounce cartoon-rounded" style="animation-delay: 0.2s"></div>
+                    <div class="w-4 h-4 bg-jerry-brown rounded-full animate-bounce cartoon-rounded" style="animation-delay: 0.3s"></div>
                 </div>
                 
-                <!-- Progress Bar -->
-                <div class="w-64 bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-progress"></div>
+                <!-- Progress Bar with Tom & Jerry Theme -->
+                <div class="w-80 bg-vintage-cream rounded-full h-3 overflow-hidden border-2 border-jerry-brown shadow-inner">
+                    <div class="h-full bg-gradient-to-r from-tom-blue via-cartoon-red to-cartoon-yellow rounded-full animate-progress"></div>
+                </div>
+                
+                <!-- Fun Loading Message -->
+                <div class="text-center">
+                    <p class="text-sm font-comic text-jerry-brown animate-pulse">Tom is chasing Jerry through the episodes...</p>
                 </div>
             </div>
         </div>
