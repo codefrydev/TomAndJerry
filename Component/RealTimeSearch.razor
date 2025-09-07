@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
-<div class="relative">
+<div class="relative" @onclick:stopPropagation="true" data-search-component>
     <div class="flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow">
         <input type="text"
                @bind="searchTerm"
@@ -22,7 +22,7 @@
     </div>
     
     <!-- Search Suggestions Dropdown -->
-    @if (showSuggestions && searchSuggestions.Any())
+    @if (showSuggestions && searchSuggestions.Any() && !searchResults.Any())
     {
         <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
             @foreach (var suggestion in searchSuggestions)
@@ -40,16 +40,45 @@
         </div>
     }
     
-    <!-- Search Results Count -->
+    <!-- Search Results Preview -->
     @if (!string.IsNullOrEmpty(searchTerm) && searchResults.Any())
     {
-        <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-40 p-3">
-            <div class="flex items-center justify-between text-sm text-gray-600">
-                <span>@searchResults.Count() results found</span>
-                <button class="text-red-600 hover:text-red-800 font-medium"
-                        @onclick="NavigateToSearchResults">
-                    View all results
-                </button>
+        <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+            <div class="p-3 border-b border-gray-200">
+                <div class="flex items-center justify-between text-sm text-gray-600">
+                    <span>@searchResults.Count() results found</span>
+                    <button class="text-red-600 hover:text-red-800 font-medium"
+                            @onclick="NavigateToSearchResults">
+                        View all results
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Quick Results Preview -->
+            <div class="p-3 space-y-2">
+                @foreach (var video in searchResults.Take(3))
+                {
+                    <div class="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                         @onclick="() => NavigateToVideo(video)">
+                        <div class="w-12 h-8 bg-gray-200 rounded overflow-hidden flex-shrink-0">
+                            <img src="@video.Thumbnail" alt="@video.Description" class="w-full h-full object-cover" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">@GetCleanTitle(video.Description)</p>
+                            <p class="text-xs text-gray-500">Tom & Jerry</p>
+                        </div>
+                    </div>
+                }
+                
+                @if (searchResults.Count() > 3)
+                {
+                    <div class="text-center pt-2">
+                        <button class="text-xs text-red-600 hover:text-red-800 font-medium"
+                                @onclick="NavigateToSearchResults">
+                            +@(searchResults.Count() - 3) more results
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     }
@@ -62,17 +91,33 @@
     private bool showSuggestions = false;
     private Timer? searchTimer;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("addClickOutsideHandler", DotNetObjectReference.Create(this));
+        }
+    }
+
     protected override void OnInitialized()
     {
         SearchService.OnSearchResultsChanged += OnSearchResultsChanged;
         
-        // Initialize search timer for debouncing
+        // Initialize search timer for debouncing (reduced to 150ms for better responsiveness)
         searchTimer = new Timer(async _ => await DebouncedSearch(), null, Timeout.Infinite, Timeout.Infinite);
     }
 
     private void OnSearchResultsChanged(IEnumerable<TomAndJerry.Model.Video> results)
     {
         searchResults = results;
+        
+        // Clear suggestions when we have search results
+        if (searchResults.Any())
+        {
+            searchSuggestions = Enumerable.Empty<string>();
+            showSuggestions = false;
+        }
+        
         InvokeAsync(StateHasChanged);
     }
 
@@ -87,17 +132,30 @@
             return;
         }
 
-        // Get search suggestions
-        searchSuggestions = await SearchService.GetSearchSuggestionsAsync(searchTerm);
+        // Perform immediate search for preview
+        var immediateResults = await VideoService.SearchVideosAsync(searchTerm);
+        searchResults = immediateResults;
         
-        // Perform search
+        // Only show suggestions if no search results found and search term is long enough
+        if (!searchResults.Any() && searchTerm.Length >= 2)
+        {
+            searchSuggestions = await SearchService.GetSearchSuggestionsAsync(searchTerm);
+            showSuggestions = searchSuggestions.Any();
+        }
+        else
+        {
+            // Clear suggestions when we have results or search term is too short
+            searchSuggestions = Enumerable.Empty<string>();
+            showSuggestions = false;
+        }
+        
+        // Also trigger the debounced search for suggestions
         await SearchService.SearchAsync(searchTerm);
         
-        showSuggestions = searchSuggestions.Any();
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task HandleKeyDown(KeyboardEventArgs e)
+    private void HandleKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
@@ -105,13 +163,12 @@
         }
         else if (e.Key == "Escape")
         {
-            showSuggestions = false;
-            await InvokeAsync(StateHasChanged);
+            CloseDropdown();
         }
         else
         {
-            // Debounce search input
-            searchTimer?.Change(300, Timeout.Infinite);
+            // Debounce search input (reduced to 150ms for better responsiveness)
+            searchTimer?.Change(150, Timeout.Infinite);
         }
     }
 
@@ -119,15 +176,15 @@
     {
         if (!string.IsNullOrEmpty(searchTerm))
         {
+            CloseDropdown();
             NavigationManager.NavigateTo($"Search/{Uri.EscapeDataString(searchTerm)}");
         }
-        showSuggestions = false;
     }
 
     private void SelectSuggestion(string suggestion)
     {
         searchTerm = suggestion;
-        showSuggestions = false;
+        CloseDropdown();
         PerformSearch();
     }
 
@@ -135,8 +192,34 @@
     {
         if (!string.IsNullOrEmpty(searchTerm))
         {
+            CloseDropdown();
             NavigationManager.NavigateTo($"Search/{Uri.EscapeDataString(searchTerm)}");
         }
+    }
+
+    private void NavigateToVideo(TomAndJerry.Model.Video video)
+    {
+        CloseDropdown();
+        NavigationManager.NavigateTo($"playmedia/{video.Id}");
+    }
+
+    private void CloseDropdown()
+    {
+        showSuggestions = false;
+        searchSuggestions = Enumerable.Empty<string>();
+        searchResults = Enumerable.Empty<TomAndJerry.Model.Video>();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string GetCleanTitle(string description)
+    {
+        return string.Join(" ", description.Split(".").Where(x => x != "mkv").Select(x => x));
+    }
+
+    [JSInvokable]
+    public void OnClickOutside()
+    {
+        CloseDropdown();
     }
 
     public void Dispose()

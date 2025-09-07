@@ -17,7 +17,7 @@ public class SearchService : ISearchService
     {
         _videoService = videoService ?? throw new ArgumentNullException(nameof(videoService));
         
-        // Debounce search with 300ms delay
+        // Debounce search with 150ms delay for better responsiveness
         _searchTimer = new Timer(PerformSearch, null, Timeout.Infinite, Timeout.Infinite);
     }
 
@@ -25,8 +25,8 @@ public class SearchService : ISearchService
     {
         _currentSearchTerm = searchTerm;
         
-        // Reset timer to debounce rapid searches
-        _searchTimer.Change(300, Timeout.Infinite);
+        // Reset timer to debounce rapid searches (150ms for better responsiveness)
+        _searchTimer.Change(150, Timeout.Infinite);
         
         return Task.FromResult(_searchResults.AsEnumerable());
     }
