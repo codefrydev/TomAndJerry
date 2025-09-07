@@ -1,16 +1,50 @@
 ﻿@inject NavigationManager Nav
 
-
-<MudPaper Width="400px" MaxHeight="480px" Class="mx-1 my-2" Style="background-color:transparent">
-    <MudCard>
-        <MudCardMedia Image="@VideoModel.Thumbnail" Height="300"/>
-        <MudCardContent>
-            <MudText
-                Typo="Typo.h5">@string.Join(" ", VideoModel.Description.Split(".").Where(x => x != "mkv").Select(x => x))</MudText>
-        </MudCardContent>
-    </MudCard>
-</MudPaper>
-
+<div class="video-card cursor-pointer group" @onclick="GoToPage">
+    <!-- Thumbnail Container -->
+    <div class="relative aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3">
+        <img src="@VideoModel.Thumbnail" 
+             alt="@GetCleanTitle()" 
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+        
+        <!-- Play Button Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Duration Badge -->
+        <div class="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded">
+            7:30
+        </div>
+    </div>
+    
+    <!-- Video Info -->
+    <div class="space-y-2">
+        <!-- Title -->
+        <h3 class="font-medium text-gray-900 text-sm line-clamp-2 group-hover:text-red-600 transition-colors">
+            @GetCleanTitle()
+        </h3>
+        
+        <!-- Channel Info -->
+        <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 rounded-full overflow-hidden">
+                <img src="Tom.png" alt="Tom & Jerry" class="w-full h-full object-cover"/>
+            </div>
+            <span class="text-xs text-gray-600">Tom & Jerry</span>
+        </div>
+        
+        <!-- Stats -->
+        <div class="text-xs text-gray-500">
+            <span>@GetRandomViews() views</span>
+            <span class="mx-1">•</span>
+            <span>@GetRandomTimeAgo()</span>
+        </div>
+    </div>
+</div>
 
 @code
 {
@@ -20,4 +54,51 @@
     {
         Nav.NavigateTo($"playmedia/{VideoModel.Id}");
     }
+    
+    private string GetCleanTitle()
+    {
+        return string.Join(" ", VideoModel.Description.Split(".").Where(x => x != "mkv").Select(x => x));
+    }
+    
+    private string GetRandomViews()
+    {
+        var random = new Random();
+        var views = random.Next(100, 10000);
+        if (views >= 1000)
+        {
+            return $"{views / 1000:F1}K";
+        }
+        return views.ToString();
+    }
+    
+    private string GetRandomTimeAgo()
+    {
+        var random = new Random();
+        var days = random.Next(1, 365);
+        if (days < 7)
+            return $"{days} days ago";
+        else if (days < 30)
+            return $"{days / 7} weeks ago";
+        else if (days < 365)
+            return $"{days / 30} months ago";
+        else
+            return $"{days / 365} years ago";
+    }
 }
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .video-card {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-2px);
+    }
+</style>

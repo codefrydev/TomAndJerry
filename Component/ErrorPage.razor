@@ -1,50 +1,29 @@
 ﻿@inject NavigationManager Nav
-@inject IDialogService DialogService
-<MudPaper Class="d-flex flex-wrap justify-center "
-          Style="background-color:transparent"
-          Elevation="0"
-          Width="100%">
-    <MudImage
-        Src="Tom.png"
-        Alt="404 Error page"
-        Class="rounded-lg imageHight"
-        @onclick="Home"
-    />
-</MudPaper>
-<MudDialog @bind-IsVisible="_visible" Options="_dialogOptions">
-    <DialogContent>
-        <MudImage Src="Tom.png"
-                  Alt="404 Error page"
-                  Class="rounded-lg"
-                  Fluid="true"
-                  @onclick="Home"/>
-        <MudButton Variant="Variant.Outlined"
-                   Color="Color.Secondary"
-                   OnClick="Home"
-                   Class="px-10 " FullWidth="true">Go Home
-        </MudButton>
-    </DialogContent>
-</MudDialog>
+
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
+        <div class="mb-6">
+            <img src="Tom.png" 
+                 alt="404 Error page" 
+                 class="w-32 h-32 mx-auto rounded-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                 @onclick="Home"/>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Oops! Page Not Found</h1>
+        <p class="text-gray-600 mb-8">
+            Looks like Tom chased Jerry away from this page! Let's go back home and find some classic episodes.
+        </p>
+        
+        <button @onclick="Home" 
+                class="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+            Go Home
+        </button>
+    </div>
+</div>
 
 @code {
-    private bool _visible = true;
-    private DialogOptions _dialogOptions = new() { FullWidth = true, ClassBackground = "my-custom-class" };
-
     void Home()
     {
-        _visible = false;
-        Nav.NavigateTo($"");
+        Nav.NavigateTo("/");
     }
-
 }
-
-<style>
-    .imageHight {
-        height: 80%;
-        width: 80%;
-    }
-
-    .my-custom-class {
-        backdrop-filter: blur(10px);
-    }
-</style>
