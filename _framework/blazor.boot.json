@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "TomAndJerry",
   "resources": {
-    "hash": "sha256-IPlSYMBBWyR5tm+iarDCaGI2BbRMsQf1XfMV8CqLvng=",
+    "hash": "sha256-69SdnsmTu6ZQakSHDsligp5BIDzXADkAcxg4n2gUDm4=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.34lha2uwja.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ovyfjf3azs.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -36,7 +36,7 @@
       "System.Text.RegularExpressions.qhcsf9u1lx.wasm": "System.Text.RegularExpressions.wasm",
       "System.Threading.ajb7vfoh0i.wasm": "System.Threading.wasm",
       "System.Private.CoreLib.gsm33jlre0.wasm": "System.Private.CoreLib.wasm",
-      "TomAndJerry.0w6kqbe9qo.wasm": "TomAndJerry.wasm",
+      "TomAndJerry.zbh3z1qxiz.wasm": "TomAndJerry.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.50iqa8w3ys.js": "dotnet.native.js",
       "dotnet.native.pk43x8e436.wasm": "dotnet.native.wasm",
@@ -95,7 +95,7 @@
       "System.Text.Json.h6jruwiato.wasm": "sha256-J2h8It3KEE7eVU+nR3IyBWHVxVMv0KvA7MTuDKKmYtc=",
       "System.Text.RegularExpressions.qhcsf9u1lx.wasm": "sha256-wn7A6lyHyUX6ncCXE68PB0fgNpaI8xcNLGHt7qHCuQo=",
       "System.Threading.ajb7vfoh0i.wasm": "sha256-2u5M0Lm/UuvEehRZEQ27Gh4hg8NGUYUzIFMJ6t0tgms=",
-      "TomAndJerry.0w6kqbe9qo.wasm": "sha256-IBpVybAF0tDw4E/3U/BHFcnOXB8H2oC9LHoX/iqOsKQ="
+      "TomAndJerry.zbh3z1qxiz.wasm": "sha256-gf41gkAXT3KkCoaD7LyxNX68Zox8hQ3dgG4n+SCy1aE="
     }
   },
   "cacheBootResources": true,
