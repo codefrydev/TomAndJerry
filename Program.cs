@@ -15,6 +15,7 @@ builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IStickerService, StickerService>();
 
 // Legacy Data class for backward compatibility (will be removed in future iterations)
 builder.Services.AddSingleton<TomAndJerry.DataBase.Data>();

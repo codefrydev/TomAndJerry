@@ -264,7 +264,7 @@
     private Video? currentVideo;
     private IEnumerable<Video> randomVideos = Enumerable.Empty<Video>();
 
-    private async Task GoTOPage(Video video)
+    private void GoTOPage(Video video)
     {
         // Navigate to the new video page
         nav.NavigateTo($"playmedia/{video.Id}");

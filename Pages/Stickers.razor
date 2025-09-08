@@ -1,0 +1,129 @@
+@page "/stickers"
+@using TomAndJerry.Services
+@using TomAndJerry.Model
+@inject IStickerService StickerService
+@inject NavigationManager Nav
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Tom & Jerry Stickers - Tom & Jerry</PageTitle>
+
+<div class="min-h-screen cartoon-bg">
+    <!-- Header Section -->
+    <div class="tom-jerry-header">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="text-center text-white">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden ring-4 ring-white/30 shadow-2xl">
+                        <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
+                    </div>
+                </div>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold font-cartoon mb-3 text-white cartoon-text">Tom & Jerry Stickers</h1>
+                <p class="text-lg text-white/90 mb-6 max-w-2xl mx-auto font-comic">
+                    Collect all your favorite character moments! 🎭✨
+                </p>
+                
+                <!-- Back Button -->
+                <button @onclick="GoBack" 
+                        class="cartoon-button px-6 py-3 text-white font-bold font-cartoon text-base">
+                    ← Back to Episodes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Filter Section -->
+        <div class="mb-8">
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+                <button @onclick="() => FilterByCategory(string.Empty)" 
+                        class="px-4 py-2 text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded @(string.IsNullOrEmpty(selectedCategory) ? "ring-2 ring-white" : "")">
+                    All Stickers
+                </button>
+                @foreach (var category in availableCategories)
+                {
+                    <button @onclick="() => FilterByCategory(category)" 
+                            class="px-4 py-2 text-sm bg-soft-blue text-jerry-brown rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-jerry-brown cartoon-rounded @(selectedCategory == category ? "ring-2 ring-jerry-brown" : "")">
+                        @category
+                    </button>
+                }
+            </div>
+            
+            <!-- Stats -->
+            <div class="text-center mb-6">
+                <p class="text-jerry-brown font-comic">
+                    Showing @filteredStickers.Count() of @allStickers.Count() stickers
+                    @if (!string.IsNullOrEmpty(selectedCategory))
+                    {
+                        <span>in <strong>@selectedCategory</strong> category</span>
+                    }
+                </p>
+            </div>
+        </div>
+
+        <!-- Sticker Gallery -->
+        <StickerGallery MaxStickers="24" Category="@selectedCategory" OnStickerSelected="OnStickerSelected" />
+
+        <!-- Load More Button -->
+        @if (filteredStickers.Count() > 12)
+        {
+            <div class="text-center mt-8">
+                <button @onclick="LoadMoreStickers" 
+                        class="cartoon-button px-8 py-4 text-white font-bold font-cartoon text-lg">
+                    Load More Stickers 🎨
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Sticker> allStickers = new();
+    private List<Sticker> filteredStickers = new();
+    private List<string> availableCategories = new();
+    private string selectedCategory = string.Empty;
+    private int currentDisplayCount = 12;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStickersAsync();
+    }
+
+    private async Task LoadStickersAsync()
+    {
+        allStickers = await StickerService.GetAllStickersAsync();
+        availableCategories = allStickers.Select(s => s.Category).Distinct().OrderBy(c => c).ToList();
+        FilterByCategory(string.Empty);
+    }
+
+    private void FilterByCategory(string category)
+    {
+        selectedCategory = category;
+        if (string.IsNullOrEmpty(category))
+        {
+            filteredStickers = allStickers.ToList();
+        }
+        else
+        {
+            filteredStickers = allStickers.Where(s => s.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        currentDisplayCount = 12;
+        StateHasChanged();
+    }
+
+    private async Task LoadMoreStickers()
+    {
+        currentDisplayCount = Math.Min(currentDisplayCount + 12, filteredStickers.Count());
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnStickerSelected(Sticker sticker)
+    {
+        await JSRuntime.InvokeVoidAsync("alert", $"You selected: {sticker.DisplayName}!\nCategory: {sticker.Category}");
+    }
+
+    private void GoBack()
+    {
+        Nav.NavigateTo("/");
+    }
+}

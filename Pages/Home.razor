@@ -1,47 +1,136 @@
 ﻿@page "/"
 @using TomAndJerry.Services
+@using TomAndJerry.Model
 @inject NavigationManager nav
 @inject IVideoService VideoService
 @inject IStateService StateService
 @inject IJSRuntime JSRuntime
+@inject IStickerService StickerService
 <PageTitle>Home - Tom & Jerry</PageTitle>
 
 <div class="min-h-screen cartoon-bg">
     <!-- Hero Section -->
-    <div class="tom-jerry-header">
-        <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="tom-jerry-header relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full bg-element"></div>
+            <div class="absolute top-20 -right-10 w-24 h-24 bg-cartoon-yellow/20 rounded-full bg-element" style="animation-delay: 1s"></div>
+            <div class="absolute bottom-10 left-1/4 w-16 h-16 bg-cartoon-red/20 rounded-full bg-element" style="animation-delay: 2s"></div>
+            <div class="absolute bottom-20 right-1/4 w-20 h-20 bg-tom-blue/20 rounded-full bg-element" style="animation-delay: 0.5s"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
             <div class="text-center text-white">
-                <div class="flex items-center justify-center mb-4 sm:mb-6">
-                    <div class="tom-character">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden ring-2 sm:ring-4 ring-white/30 shadow-2xl">
-                            <img src="Tom.png" alt="Tom" class="w-full h-full object-cover"/>
+                <!-- Character Battle Section -->
+                <div class="flex items-center justify-center mb-6 sm:mb-8">
+                    <div class="tom-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Tom"))">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="10" />
+                        </div>
+                        <div class="mt-2 text-center">
+                            <div class="text-sm sm:text-base font-bold font-cartoon text-white drop-shadow-lg">TOM</div>
+                            <div class="text-xs font-comic text-white/90 drop-shadow-md">The Cat</div>
                         </div>
                     </div>
-                    <div class="mx-2 sm:mx-4 text-2xl sm:text-4xl font-bold font-cartoon text-white cartoon-text">VS</div>
-                    <div class="jerry-character">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden ring-2 sm:ring-4 ring-white/30 shadow-2xl">
-                            <img src="Tom.png" alt="Jerry" class="w-full h-full object-cover"/>
+                    
+                    <div class="mx-4 sm:mx-6 text-3xl sm:text-5xl font-bold font-cartoon cartoon-text animate-wiggle">
+                        <div class="relative">
+                            <span class="gradient-text bg-clip-text text-transparent drop-shadow-lg">VS</span>
+                            <div class="absolute -top-2 -right-2 text-lg animate-bounce">⚔️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="jerry-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Jerry"))">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3">
+                            <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
+                        </div>
+                        <div class="mt-2 text-center">
+                            <div class="text-sm sm:text-base font-bold font-cartoon text-white drop-shadow-lg">JERRY</div>
+                            <div class="text-xs font-comic text-white/90 drop-shadow-md">The Mouse</div>
                         </div>
                     </div>
                 </div>
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-cartoon mb-3 sm:mb-4 text-white cartoon-text">Tom & Jerry</h1>
-                <p class="text-base sm:text-lg md:text-xl text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto font-comic px-4">
-                    The timeless cat and mouse adventures that never get old! 🐱🐭
-                </p>
-                <!-- Stats -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-md mx-auto px-4">
-                    <div class="text-center tom-jerry-card p-3 sm:p-4">
-                        <div class="text-2xl sm:text-3xl font-bold mb-1 font-cartoon text-tom-blue">@StateService.CurrentVideos.Count()</div>
-                        <div class="text-xs sm:text-sm text-jerry-brown font-comic">Episodes</div>
+                
+                <!-- Main Title with Animation -->
+                <div class="mb-4 sm:mb-6">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-cartoon cartoon-text mb-2 animate-fadeInUp">
+                        <span class="gradient-text bg-clip-text text-transparent">
+                            Tom & Jerry
+                        </span>
+                    </h1>
+                    <div class="text-lg sm:text-xl md:text-2xl text-white font-comic animate-fadeInUp drop-shadow-lg" style="animation-delay: 0.2s">
+                        The Ultimate Cat & Mouse Showdown! 🎭
                     </div>
-                    <div class="text-center tom-jerry-card p-3 sm:p-4">
-                        <div class="text-2xl sm:text-3xl font-bold mb-1 font-cartoon text-cartoon-red">1940</div>
-                        <div class="text-xs sm:text-sm text-jerry-brown font-comic">Since</div>
+                </div>
+                
+                <!-- Interactive Description -->
+                <div class="mb-8 sm:mb-10 max-w-3xl mx-auto px-4">
+                    <p class="text-base sm:text-lg md:text-xl text-white mb-4 font-comic leading-relaxed animate-fadeInUp drop-shadow-md" style="animation-delay: 0.4s">
+                        Experience the timeless rivalry that has entertained generations! Watch as Tom the cat tries every trick in the book to catch Jerry the mouse, 
+                        but Jerry always finds a clever way to escape. From classic 1940s episodes to modern adventures, 
+                        every chase is filled with laughter, creativity, and pure cartoon magic! ✨
+                    </p>
+                    
+                    <!-- Fun Facts Carousel -->
+                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 animate-fadeInUp fact-carousel" style="animation-delay: 0.6s">
+                        <div class="text-sm sm:text-base text-white font-comic drop-shadow-sm">
+                            <span class="text-cartoon-yellow font-bold drop-shadow-md">💡 Fun Fact:</span> 
+                            <span id="fun-fact-text" class="drop-shadow-sm">Tom & Jerry won 7 Academy Awards for Best Animated Short Film!</span>
+                        </div>
                     </div>
-                    <div class="text-center tom-jerry-card p-3 sm:p-4">
-                        <div class="text-2xl sm:text-3xl font-bold mb-1 font-cartoon text-cartoon-yellow">∞</div>
-                        <div class="text-xs sm:text-sm text-jerry-brown font-comic">Laughs</div>
+                </div>
+                
+                <!-- Enhanced Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4 animate-fadeInUp" style="animation-delay: 0.8s">
+                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                            <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-tom-blue group-hover:text-cartoon-red transition-colors">
+                                @StateService.CurrentVideos.Count()
+                            </div>
+                            <div class="text-sm sm:text-base text-jerry-brown font-comic font-bold">Episodes Available</div>
+                            <div class="text-xs text-jerry-dark-brown font-comic mt-1">Watch anytime!</div>
+                        </div>
                     </div>
+                    
+                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                            <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-cartoon-red group-hover:text-tom-blue transition-colors">1940</div>
+                            <div class="text-sm sm:text-base text-jerry-brown font-comic font-bold">First Episode</div>
+                            <div class="text-xs text-jerry-dark-brown font-comic mt-1">Over 80 years!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                            <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-cartoon-yellow group-hover:text-cartoon-red transition-colors">∞</div>
+                            <div class="text-sm sm:text-base text-jerry-brown font-comic font-bold">Laughs Generated</div>
+                            <div class="text-xs text-jerry-dark-brown font-comic mt-1">Countless smiles!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                            <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-cartoon-pink group-hover:text-cartoon-yellow transition-colors">7</div>
+                            <div class="text-sm sm:text-base text-jerry-brown font-comic font-bold">Oscar Awards</div>
+                            <div class="text-xs text-jerry-dark-brown font-comic mt-1">Animation legend!</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interactive Elements -->
+                <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeInUp" style="animation-delay: 1s">
+                    <button @onclick="ScrollToFeatured" 
+                            class="cartoon-button px-8 py-4 text-white font-bold font-cartoon text-lg hover:scale-105 transition-transform">
+                        🎬 Start Watching Now
+                    </button>
+                    <button @onclick="ScrollToStickerGallery" 
+                            class="px-8 py-4 bg-white/20 backdrop-blur-sm text-white rounded-2xl hover:bg-white/30 transition-all font-bold font-comic text-lg border-2 border-white/30 hover:border-white/50">
+                        🎭 Collect Stickers
+                    </button>
+                    <button @onclick="ShowRandomFact" 
+                            class="px-6 py-4 bg-cartoon-yellow/20 backdrop-blur-sm text-white rounded-2xl hover:bg-cartoon-yellow/30 transition-all font-bold font-comic text-lg border-2 border-cartoon-yellow/30">
+                        💡 Random Fact
+                    </button>
                 </div>
             </div>
         </div>
@@ -77,7 +166,7 @@
                 <div class="text-center py-8">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-16 h-16 rounded-full overflow-hidden ring-4 ring-red-200 animate-pulse">
-                            <img src="Tom.png" alt="Tom & Jerry" class="w-full h-full object-cover"/>
+                            <RandomSticker CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="5" />
                         </div>
                     </div>
                     <div class="space-y-3">
@@ -223,6 +312,38 @@
                 </div>
             </div>
             
+            <!-- Sticker Gallery Section -->
+            <div id="sticker-gallery" class="mb-8 sm:mb-12">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cartoon-pink to-cartoon-red rounded-full flex items-center justify-center shadow-lg cartoon-rounded">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-bold font-cartoon text-jerry-brown cartoon-text">Tom & Jerry Stickers</h2>
+                            <p class="text-jerry-dark-brown font-comic text-base sm:text-lg">Collect your favorite character moments! 🎭✨</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Sticker Actions -->
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <button @onclick="RefreshStickers" 
+                                class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded">
+                            🔄 Refresh
+                        </button>
+                        <button @onclick="ShowAllStickers" 
+                                class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-soft-blue text-jerry-brown rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-jerry-brown cartoon-rounded">
+                            👀 View All
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Sticker Gallery -->
+                <StickerGallery MaxStickers="12" OnStickerSelected="OnStickerSelected" />
+            </div>
+
             <!-- All Episodes Section -->
             <div id="all-episodes" class="mb-8 sm:mb-12">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
@@ -303,6 +424,59 @@
     private async Task ScrollToAllEpisodes()
     {
         await ScrollToSection("all-episodes");
+    }
+
+    private async Task ScrollToStickerGallery()
+    {
+        await ScrollToSection("sticker-gallery");
+    }
+
+    private void RefreshStickers()
+    {
+        // This will trigger a refresh of the sticker gallery
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ShowAllStickers()
+    {
+        // Navigate to the dedicated stickers page
+        nav.NavigateTo("/stickers");
+    }
+
+    private async Task OnStickerSelected(Sticker sticker)
+    {
+        // Handle sticker selection - could show a modal, navigate, or perform an action
+        await JSRuntime.InvokeVoidAsync("alert", $"You selected: {sticker.DisplayName}!");
+    }
+
+    private async Task ShowCharacterInfo(string character)
+    {
+        string info = character == "Tom" 
+            ? "Tom is a blue-grey cat who lives in the house with his owner. Despite his best efforts, he can never catch Jerry, but that doesn't stop him from trying! Tom is known for his elaborate schemes and comedic failures."
+            : "Jerry is a small brown mouse who lives in the house. He's incredibly clever and always manages to outsmart Tom with his quick thinking and resourcefulness. Jerry loves cheese and enjoys playing tricks on Tom.";
+        
+        await JSRuntime.InvokeVoidAsync("alert", $"{character} Info:\n\n{info}");
+    }
+
+    private async Task ShowRandomFact()
+    {
+        string[] facts = {
+            "Tom & Jerry won 7 Academy Awards for Best Animated Short Film!",
+            "The original creators were William Hanna and Joseph Barbera, who later founded Hanna-Barbera.",
+            "Tom's full name is Thomas Cat, and Jerry's full name is Gerald Mouse.",
+            "The show was originally called 'Puss Gets the Boot' before becoming Tom & Jerry.",
+            "Over 160 episodes were produced between 1940 and 1958.",
+            "Tom & Jerry has been translated into over 30 languages worldwide.",
+            "The characters rarely speak - most communication is through actions and expressions.",
+            "Tom & Jerry was one of the first cartoons to use limited animation techniques.",
+            "The show has been rebooted multiple times with different animation styles.",
+            "Tom & Jerry merchandise has generated billions in revenue over the decades."
+        };
+        
+        var random = new Random();
+        var fact = facts[random.Next(facts.Length)];
+        
+        await JSRuntime.InvokeVoidAsync("alert", $"🎭 Fun Fact:\n\n{fact}");
     }
 
     protected override async Task OnInitializedAsync()
