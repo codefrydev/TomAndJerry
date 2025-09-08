@@ -21,11 +21,11 @@
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-4">
                     <button @onclick="GoToHomePage" 
-                            class="text-white hover:text-cartoon-yellow transition-colors font-comic font-bold">
+                            class="text-white hover:text-yellow-300 transition-colors font-comic font-bold drop-shadow-lg">
                         Episodes
                     </button>
                     <button @onclick="GoToStickers" 
-                            class="text-white hover:text-cartoon-yellow transition-colors font-comic font-bold">
+                            class="text-white hover:text-yellow-300 transition-colors font-comic font-bold drop-shadow-lg">
                         Stickers
                     </button>
                 </div>
@@ -40,16 +40,16 @@
             <div class="flex items-center space-x-1 sm:space-x-2">
                 <!-- Stats -->
                 <div class="hidden sm:flex items-center space-x-2 md:space-x-4 text-sm text-white">
-                    <div class="text-center bg-white/20 rounded-2xl px-2 sm:px-4 py-1 sm:py-2 cartoon-rounded">
+                    <div class="text-center bg-white/20 backdrop-blur-sm rounded-2xl px-2 sm:px-4 py-1 sm:py-2 cartoon-rounded border border-white/30">
                         @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
                         {
                             <div class="h-4 sm:h-5 bg-white/30 rounded w-6 sm:w-8 mx-auto mb-1 skeleton"></div>
-                            <div class="text-xs text-white/80 font-comic">Episodes</div>
+                            <div class="text-xs text-white font-comic font-semibold drop-shadow-md">Episodes</div>
                         }
                         else
                         {
-                            <div class="font-bold text-white font-cartoon text-sm sm:text-lg">@StateService.CurrentVideos.Count()</div>
-                            <div class="text-xs text-white/80 font-comic">Episodes</div>
+                            <div class="font-bold text-white font-cartoon text-sm sm:text-lg drop-shadow-lg">@StateService.CurrentVideos.Count()</div>
+                            <div class="text-xs text-white font-comic font-semibold drop-shadow-md">Episodes</div>
                         }
                     </div>
                 </div>

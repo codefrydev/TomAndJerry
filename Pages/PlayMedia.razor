@@ -28,13 +28,13 @@
                 
                 <!-- Video Title and Info -->
                 <div class="tom-jerry-card p-4 sm:p-6">
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-cartoon text-jerry-brown leading-tight mb-4 sm:mb-6 cartoon-text">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-cartoon text-amber-800 leading-tight mb-4 sm:mb-6 cartoon-text">
                         @(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry Episode")
                     </h1>
                     
                     <!-- Video Stats and Actions -->
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-jerry-brown">
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-amber-800 font-semibold">
                             <div class="flex items-center space-x-2">
                                 <svg class="w-4 h-4 text-cartoon-red" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
@@ -43,7 +43,7 @@
                                 <span class="font-bold font-comic">@GetRandomViews() views</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-tom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <span class="font-comic">@GetRandomTimeAgo()</span>
@@ -62,26 +62,26 @@
                         </div>
                         
                         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                            <button class="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-xs sm:text-sm lg:text-base cartoon-rounded">
+                            <button class="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-amber-800 hover:text-amber-900 text-xs sm:text-sm lg:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                                 </svg>
                                 <span class="hidden sm:inline">@GetRandomLikes()</span>
                                 <span class="sm:hidden">Like</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-red hover:bg-cartoon-pink rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-red hover:bg-cartoon-pink rounded-full transition-all duration-200 font-bold font-comic text-amber-800 hover:text-amber-900 text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                                 </svg>
                                 <span>Share</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-yellow hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-yellow hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-amber-800 hover:text-amber-900 text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                                 </svg>
                                 <span>Save</span>
                             </button>
-                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-jerry-brown hover:text-jerry-dark-brown text-sm sm:text-base cartoon-rounded">
+                            <button class="flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-amber-800 hover:text-amber-900 text-sm sm:text-base cartoon-rounded">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                                 </svg>
@@ -223,8 +223,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold font-cartoon text-jerry-brown">Up next</h3>
-                                    <p class="text-sm text-jerry-dark-brown font-comic">Autoplay is on</p>
+                                    <h3 class="font-bold font-cartoon text-amber-800">Up next</h3>
+                                    <p class="text-sm text-amber-900 font-comic font-semibold">Autoplay is on</p>
                                 </div>
                             </div>
                             <button class="relative inline-flex h-6 w-11 items-center rounded-full bg-cartoon-red transition-colors focus:outline-none focus:ring-2 focus:ring-cartoon-red focus:ring-offset-2 cartoon-rounded">
@@ -245,7 +245,7 @@
                     
                     <!-- Load More Button -->
                     <div class="text-center">
-                        <button class="px-6 py-3 bg-soft-blue hover:bg-cartoon-yellow text-jerry-brown rounded-full font-bold font-comic transition-colors cartoon-rounded">
+                        <button class="px-6 py-3 bg-soft-blue hover:bg-cartoon-yellow text-amber-800 rounded-full font-bold font-comic transition-colors cartoon-rounded">
                             Load more videos
                         </button>
                     </div>
