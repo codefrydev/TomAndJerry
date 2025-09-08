@@ -18,7 +18,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Publish Blazor WebAssembly project
-        run: dotnet publish TomAndJerry.csproj -c Release -o release --nologo
+        run: dotnet publish src/TomAndJerry.csproj -c Release -o release --nologo
 
       - name: Change base-tag in index.html from / to TomAndJerry
         run: sed -i 's/<base href="\/" \/>/<base href="\/TomAndJerry\/" \/>/g' release/wwwroot/index.html
