@@ -1,19 +1,22 @@
-﻿@inherits LayoutComponentBase
+﻿@using TomAndJerry.Component
+@inherits LayoutComponentBase
 <ErrorBoundary>
     <ChildContent>
-        <div class="min-h-screen cartoon-bg">
+        <div class="min-h-screen cartoon-bg flex flex-col">
             <AppBar/>
-            <main class="pt-16">
+            <main class="pt-16 flex-1">
                 @Body
             </main>
+            <Footer/>
         </div>
     </ChildContent>
     <ErrorContent>
-        <div class="min-h-screen cartoon-bg">
+        <div class="min-h-screen cartoon-bg flex flex-col">
             <AppBar/>
-            <main class="pt-16">
+            <main class="pt-16 flex-1">
                 @Body
             </main>
+            <Footer/>
         </div>
     </ErrorContent>
 </ErrorBoundary>

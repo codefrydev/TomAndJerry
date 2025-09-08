@@ -465,3 +465,120 @@ input:focus {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
 }
+
+/* Footer Styles */
+.tom-jerry-footer {
+    background: linear-gradient(135deg, #1E40AF 0%, #DC2626 50%, #D97706 100%);
+    border-top: 4px solid #FEF08A;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.tom-jerry-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(254, 240, 138, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(248, 113, 113, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.tom-jerry-footer .tom-character,
+.tom-jerry-footer .jerry-character {
+    animation: characterBounce 2s ease-in-out infinite;
+}
+
+.tom-jerry-footer .tom-character {
+    animation-delay: 0s;
+}
+
+.tom-jerry-footer .jerry-character {
+    animation-delay: 1s;
+}
+
+@keyframes characterBounce {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-3px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(-6px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-3px) rotate(-2deg);
+    }
+}
+
+.tom-jerry-footer button:hover {
+    transform: scale(1.05) translateY(-2px);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.tom-jerry-footer .bg-white\/20 {
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.tom-jerry-footer .bg-white\/20:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Footer disclaimer styling */
+.tom-jerry-footer .text-yellow-300 {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    animation: disclaimerPulse 2s ease-in-out infinite;
+}
+
+.tom-jerry-footer .text-yellow-200 {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+@keyframes disclaimerPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.tom-jerry-footer .border-t {
+    border-image: linear-gradient(90deg, transparent, rgba(254, 240, 138, 0.3), transparent) 1;
+}
+
+/* Footer responsive adjustments */
+@media (max-width: 768px) {
+    .tom-jerry-footer {
+        padding: 1.5rem 0;
+    }
+    
+    .tom-jerry-footer .grid {
+        gap: 2rem;
+    }
+    
+    .tom-jerry-footer h3 {
+        font-size: 1.5rem;
+    }
+    
+    .tom-jerry-footer h4 {
+        font-size: 1rem;
+    }
+    
+    .tom-jerry-footer .text-sm {
+        font-size: 0.8rem;
+    }
+    
+    .tom-jerry-footer .text-xs {
+        font-size: 0.7rem;
+    }
+}
