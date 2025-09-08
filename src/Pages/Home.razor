@@ -13,7 +13,7 @@
 
 <div class="min-h-screen cartoon-bg">
     <!-- Hero Section -->
-    <div class="tom-jerry-header relative overflow-hidden">
+    <div id="hero-section" class="tom-jerry-header relative overflow-hidden">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full bg-element"></div>
@@ -25,8 +25,8 @@
         <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
             <div class="text-center text-white">
                 <!-- Character Battle Section -->
-                <div class="flex items-center justify-center mb-6 sm:mb-8">
-                    <div class="tom-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Tom"))">
+                <div id="character-battle-section" class="flex items-center justify-center mb-6 sm:mb-8">
+                    <div id="tom-character-card" class="tom-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Tom"))">
                         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                             <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="10" />
                         </div>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     
-                    <div class="jerry-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Jerry"))">
+                    <div id="jerry-character-card" class="jerry-character group cursor-pointer" @onclick="@(() => ShowCharacterInfo("Jerry"))">
                         <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3">
                             <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
                         </div>
@@ -55,8 +55,8 @@
                 </div>
                 
                 <!-- Main Title with Animation -->
-                <div class="mb-4 sm:mb-6">
-                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-cartoon cartoon-text mb-2 animate-fadeInUp">
+                <div id="main-title-section" class="mb-4 sm:mb-6">
+                    <h1 id="main-title" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-cartoon cartoon-text mb-2 animate-fadeInUp">
                         <span class="gradient-text bg-clip-text text-transparent">
                             Tom & Jerry
                         </span>
@@ -67,7 +67,7 @@
                 </div>
                 
                 <!-- Interactive Description -->
-                <div class="mb-8 sm:mb-10 max-w-3xl mx-auto px-4">
+                <div id="description-section" class="mb-8 sm:mb-10 max-w-3xl mx-auto px-4">
                     <p class="text-base sm:text-lg md:text-xl text-white mb-4 font-comic leading-relaxed animate-fadeInUp drop-shadow-lg font-semibold" style="animation-delay: 0.4s">
                         Experience the timeless rivalry that has entertained generations! Watch as Tom the cat tries every trick in the book to catch Jerry the mouse, 
                         but Jerry always finds a clever way to escape. From classic 1940s episodes to modern adventures, 
@@ -75,7 +75,7 @@
                     </p>
                     
                     <!-- Fun Facts Carousel -->
-                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 animate-fadeInUp fact-carousel" style="animation-delay: 0.6s">
+                    <div id="fun-facts-carousel" class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 animate-fadeInUp fact-carousel" style="animation-delay: 0.6s">
                         <div class="text-sm sm:text-base text-white font-comic drop-shadow-lg font-semibold">
                             <span class="text-yellow-300 font-bold drop-shadow-lg">💡 Fun Fact:</span> 
                             <span id="fun-fact-text" class="drop-shadow-lg">Tom & Jerry won 7 Academy Awards for Best Animated Short Film!</span>
@@ -84,8 +84,8 @@
                 </div>
                 
                 <!-- Enhanced Stats Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4 animate-fadeInUp" style="animation-delay: 0.8s">
-                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                <div id="stats-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4 animate-fadeInUp" style="animation-delay: 0.8s">
+                    <div id="episodes-available-card" class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
                         <div class="text-center">
                             <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-blue-600 group-hover:text-red-600 transition-colors">
                                 @StateService.CurrentVideos.Count()
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     
-                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                    <div id="first-episode-card" class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
                         <div class="text-center">
                             <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-red-600 group-hover:text-blue-600 transition-colors">1940</div>
                             <div class="text-sm sm:text-base text-amber-800 font-comic font-bold">First Episode</div>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     
-                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                    <div id="laughs-generated-card" class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
                         <div class="text-center">
                             <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-yellow-600 group-hover:text-red-600 transition-colors">∞</div>
                             <div class="text-sm sm:text-base text-amber-800 font-comic font-bold">Laughs Generated</div>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     
-                    <div class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
+                    <div id="oscar-awards-card" class="tom-jerry-card p-4 sm:p-6 group hover:scale-105 transition-all duration-300">
                         <div class="text-center">
                             <div class="text-3xl sm:text-4xl font-bold mb-2 font-cartoon text-pink-600 group-hover:text-yellow-600 transition-colors">7</div>
                             <div class="text-sm sm:text-base text-amber-800 font-comic font-bold">Oscar Awards</div>
@@ -119,24 +119,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+                <div id="action-buttons-section" class="max-w-7xl mx-auto px-4 py-6 sm:py-8">
                     <div class="text-center">
-                        <h2 class="text-2xl sm:text-3xl font-bold font-cartoon text-amber-800 mb-2 cartoon-text">Start Watching Now!</h2>
-                        <p class="text-amber-900 mb-4 sm:mb-6 font-comic text-base sm:text-lg px-4 font-semibold">Discover your favorite Tom & Jerry episodes</p>
-                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-                            <button @onclick="ScrollToFeatured" 
+                        <h2 id="start-watching-title" class="text-2xl sm:text-3xl font-bold font-cartoon text-amber-800 mb-2 cartoon-text">Start Watching Now!</h2>
+                        <p id="start-watching-description" class="text-amber-900 mb-4 sm:mb-6 font-comic text-base sm:text-lg px-4 font-semibold">Discover your favorite Tom & Jerry episodes</p>
+                        <div id="action-buttons-container" class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+                            <button id="browse-episodes-btn" @onclick="ScrollToFeatured" 
                                     class="cartoon-button px-6 sm:px-8 py-3 sm:py-4 text-white font-bold font-cartoon text-base sm:text-lg">
                                 🎬 Browse Episodes
                             </button>
-                            <button @onclick="ScrollToAllEpisodes" 
+                            <button id="view-all-btn" @onclick="ScrollToAllEpisodes" 
                                     class="px-6 sm:px-8 py-3 sm:py-4 bg-soft-blue text-amber-800 rounded-2xl hover:bg-cartoon-yellow transition-colors font-bold font-comic text-base sm:text-lg border-2 border-amber-800 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                 📺 View All
                             </button>
-                            <button @onclick="GoToQuiz" 
+                            <button id="take-quiz-btn" @onclick="GoToQuiz" 
                                     class="px-6 sm:px-8 py-3 sm:py-4 bg-cartoon-pink text-white rounded-2xl hover:bg-cartoon-red transition-colors font-bold font-comic text-base sm:text-lg border-2 border-white/30 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                 🧠 Take Quiz
                             </button>
-                            <button @onclick="ShowRandomFact" 
+                            <button id="random-fact-btn" @onclick="ShowRandomFact" 
                                     class="px-6 py-4 bg-cartoon-yellow/20 backdrop-blur-sm text-white rounded-2xl hover:bg-cartoon-yellow/30 transition-all font-bold font-comic text-lg border-2 border-cartoon-yellow/30">
                                 💡 Random Fact
                             </button>
@@ -148,13 +148,13 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div id="main-content" class="max-w-7xl mx-auto px-4 py-8">
         @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
         {
             <!-- Enhanced Loading State -->
-            <div class="space-y-8">
+            <div id="loading-state" class="space-y-8">
                 <!-- Loading Header -->
-                <div class="text-center py-8">
+                <div id="loading-header" class="text-center py-8">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-16 h-16 rounded-full overflow-hidden ring-4 ring-red-200 animate-pulse">
                             <RandomSticker CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="5" />
@@ -167,7 +167,7 @@
                 </div>
                 
                 <!-- Featured Section Loading -->
-                <div class="mb-12">
+                <div id="featured-loading-section" class="mb-12">
                     <div class="flex items-center space-x-3 mb-6">
                         <div class="w-10 h-10 bg-gray-200 rounded-full skeleton"></div>
                         <div class="space-y-2">
@@ -177,7 +177,7 @@
                     </div>
                     
                     <!-- Featured Video Grid Loading -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    <div id="featured-video-grid-loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         @for (int i = 0; i < 10; i++)
                         {
                             <div class="video-card-skeleton">
@@ -211,7 +211,7 @@
                 </div>
                 
                 <!-- All Episodes Section Loading -->
-                <div class="mb-12">
+                <div id="all-episodes-loading-section" class="mb-12">
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center space-x-3">
                             <div class="w-10 h-10 bg-gray-200 rounded-full skeleton"></div>
@@ -230,7 +230,7 @@
                     </div>
                     
                     <!-- All Videos Grid Loading -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    <div id="all-videos-grid-loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         @for (int i = 0; i < 20; i++)
                         {
                             <div class="video-card-skeleton">
@@ -264,7 +264,7 @@
                 </div>
                 
                 <!-- Loading Message -->
-                <div class="text-center py-8">
+                <div id="loading-message" class="text-center py-8">
                     <div class="inline-flex items-center space-x-3 bg-white rounded-xl px-6 py-4 shadow-lg border border-gray-200">
                         <div class="animate-spin rounded-full h-6 w-6 border-2 border-gray-200 border-t-red-600"></div>
                         <span class="text-gray-700 font-medium">Loading Classic Episodes...</span>
@@ -276,7 +276,7 @@
         {
             <!-- Featured Section -->
             <div id="featured" class="mb-8 sm:mb-12">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
+                <div id="featured-header" class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
                     <div class="flex items-center space-x-3 sm:space-x-4">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-tom-blue to-cartoon-red rounded-full flex items-center justify-center shadow-lg cartoon-rounded">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -289,7 +289,7 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <button @onclick="RefreshFeaturedEpisodes" 
+                        <button id="refresh-featured-btn" @onclick="RefreshFeaturedEpisodes" 
                                 class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded">
                             🔄 Refresh Featured
                         </button>
@@ -298,7 +298,7 @@
                 </div>
                 
                 <!-- Featured Video Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
+                <div id="featured-video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
                     @foreach (var item in StateService.FeaturedVideos)
                     {
                         <Thumbnail VideoModel="@item"/>
@@ -308,7 +308,7 @@
             
             <!-- Sticker Gallery Section -->
             <div id="sticker-gallery" class="mb-8 sm:mb-12">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
+                <div id="sticker-gallery-header" class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
                     <div class="flex items-center space-x-3 sm:space-x-4">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cartoon-pink to-cartoon-red rounded-full flex items-center justify-center shadow-lg cartoon-rounded">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -322,12 +322,12 @@
                     </div>
                     
                     <!-- Sticker Actions -->
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <button @onclick="RefreshStickers" 
+                    <div id="sticker-actions" class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <button id="refresh-stickers-btn" @onclick="RefreshStickers" 
                                 class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded">
                             🔄 Refresh
                         </button>
-                        <button @onclick="ShowAllStickers" 
+                        <button id="view-all-stickers-btn" @onclick="ShowAllStickers" 
                                 class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-soft-blue text-amber-800 rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-amber-800 cartoon-rounded">
                             👀 View All
                         </button>
@@ -340,7 +340,7 @@
 
             <!-- All Episodes Section -->
             <div id="all-episodes" class="mb-8 sm:mb-12">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
+                <div id="all-episodes-header" class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
                     <div class="flex items-center space-x-3 sm:space-x-4">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cartoon-yellow to-cartoon-orange rounded-full flex items-center justify-center shadow-lg cartoon-rounded-alt">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -354,16 +354,16 @@
                     </div>
                     
                     <!-- Filter Options -->
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <button @onclick="@(() => ApplyFilter("All"))" 
+                    <div id="filter-options" class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <button id="filter-all-btn" @onclick="@(() => ApplyFilter("All"))" 
                                 class="@GetFilterButtonClass("All")">
                             All
                         </button>
-                        <button @onclick="@(() => ApplyFilter("Classic"))" 
+                        <button id="filter-classic-btn" @onclick="@(() => ApplyFilter("Classic"))" 
                                 class="@GetFilterButtonClass("Classic")">
                             Classic
                         </button>
-                        <button @onclick="@(() => ApplyFilter("Modern"))" 
+                        <button id="filter-modern-btn" @onclick="@(() => ApplyFilter("Modern"))" 
                                 class="@GetFilterButtonClass("Modern")">
                             Modern
                         </button>
@@ -371,7 +371,7 @@
                 </div>
                 
                 <!-- All Videos Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
+                <div id="all-videos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
                     @foreach (var item in filteredVideos)
                     {
                         <Thumbnail VideoModel="@item"/>

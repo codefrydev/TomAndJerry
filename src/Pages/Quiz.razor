@@ -11,7 +11,7 @@
 
 <div class="min-h-screen cartoon-bg">
     <!-- Header Section -->
-    <div class="tom-jerry-header relative overflow-hidden">
+    <div id="quiz-header" class="tom-jerry-header relative overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full bg-element"></div>
             <div class="absolute top-20 -right-10 w-24 h-24 bg-cartoon-yellow/20 rounded-full bg-element" style="animation-delay: 1s"></div>
@@ -21,7 +21,7 @@
         <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
             <div class="text-center text-white">
                 <!-- Character Stickers -->
-                <div class="flex justify-center items-center mb-6">
+                <div id="quiz-character-stickers" class="flex justify-center items-center mb-6">
                     <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 hover:scale-110 hover:rotate-3">
                         <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
                     </div>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 
-                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold font-cartoon cartoon-text mb-4 animate-fadeInUp">
+                <h1 id="quiz-main-title" class="text-4xl sm:text-5xl md:text-6xl font-bold font-cartoon cartoon-text mb-4 animate-fadeInUp">
                     <span class="gradient-text bg-clip-text text-transparent">
                         Tom & Jerry Quiz
                     </span>
@@ -49,12 +49,12 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <div id="quiz-main-content" class="max-w-4xl mx-auto px-4 py-8">
         @if (!quizStarted && !showResults)
         {
             <!-- Quiz Setup -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
-                <div class="text-center mb-8">
+            <div id="quiz-setup" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
+                <div id="quiz-setup-header" class="text-center mb-8">
                     <div class="relative w-24 h-24 mx-auto mb-6">
                         <div class="absolute inset-0 bg-gradient-to-r from-tom-blue to-cartoon-red rounded-full animate-pulse"></div>
                         <div class="absolute inset-2 bg-white rounded-full flex items-center justify-center">
@@ -66,7 +66,7 @@
                 </div>
 
                 <!-- Question Count Selection -->
-                <div class="mb-8">
+                <div id="question-count-selection" class="mb-8">
                     <div class="text-center mb-6">
                         <div class="w-16 h-16 mx-auto mb-3 bg-tom-blue rounded-full flex items-center justify-center shadow-lg">
                             <span class="text-white text-2xl">📊</span>
@@ -74,7 +74,7 @@
                         <h3 class="text-2xl font-bold font-cartoon text-amber-800">How Many Questions?</h3>
                         <p class="text-amber-700 font-comic">Choose your quiz length</p>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div id="question-count-options" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         @foreach (var option in questionCountOptions)
                         {
                             <button @onclick="@(() => SelectQuestionCount((int)option.Value))"
@@ -96,7 +96,7 @@
                 </div>
 
                 <!-- Difficulty Selection -->
-                <div class="mb-8">
+                <div id="difficulty-selection" class="mb-8">
                     <div class="text-center mb-6">
                         <div class="w-16 h-16 mx-auto mb-3 bg-cartoon-red rounded-full flex items-center justify-center shadow-lg">
                             <span class="text-white text-2xl">⚡</span>
@@ -104,7 +104,7 @@
                         <h3 class="text-2xl font-bold font-cartoon text-amber-800">Difficulty Level</h3>
                         <p class="text-amber-700 font-comic">How challenging do you want it?</p>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div id="difficulty-options" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         @foreach (var option in difficultyOptions)
                         {
                             <button @onclick="@(() => SelectDifficulty((string)option.Value))"
@@ -126,7 +126,7 @@
                 </div>
 
                 <!-- Category Selection -->
-                <div class="mb-8">
+                <div id="category-selection" class="mb-8">
                     <div class="text-center mb-6">
                         <div class="w-16 h-16 mx-auto mb-3 bg-cartoon-yellow rounded-full flex items-center justify-center shadow-lg">
                             <span class="text-white text-2xl">📚</span>
@@ -134,7 +134,7 @@
                         <h3 class="text-2xl font-bold font-cartoon text-amber-800">Quiz Category</h3>
                         <p class="text-amber-700 font-comic">What topics interest you most?</p>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div id="category-options" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                         @foreach (var option in categoryOptions)
                         {
                             <button @onclick="@(() => SelectCategory((string)option.Value))"
@@ -155,8 +155,8 @@
                 </div>
 
                 <!-- Start Button with Preview -->
-                <div class="text-center">
-                    <div class="bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl p-4 mb-6 border-2 border-amber-300">
+                <div id="start-button-section" class="text-center">
+                    <div id="quiz-preview" class="bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl p-4 mb-6 border-2 border-amber-300">
                         <div class="flex items-center justify-center space-x-4 text-amber-800 font-comic">
                             <div class="text-center">
                                 <div class="text-2xl font-bold font-cartoon">@questionCount</div>
@@ -175,7 +175,7 @@
                         </div>
                     </div>
                     
-                    <button @onclick="StartQuiz" 
+                    <button id="start-quiz-btn" @onclick="StartQuiz" 
                             class="group relative overflow-hidden cartoon-button px-12 py-4 text-white font-bold font-cartoon text-xl sm:text-2xl transform hover:scale-105 transition-all duration-300">
                         <div class="absolute inset-0 bg-gradient-to-r from-tom-blue via-cartoon-red to-cartoon-yellow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div class="relative flex items-center space-x-3">
@@ -194,7 +194,7 @@
                 
 
                 <!-- Visual Timer -->
-                <div class="mb-8">
+                <div id="quiz-timer" class="mb-8">
                     <div class="text-center mb-4">
                         <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl px-6 py-3 shadow-lg border-2 border-amber-300">
                             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tom-blue to-cartoon-red flex items-center justify-center animate-pulse">
@@ -211,7 +211,7 @@
                     </div>
                     
                     <!-- Animated Progress Bar -->
-                    <div class="relative">
+                    <div id="timer-progress-bar" class="relative">
                         <div class="w-full bg-amber-200 rounded-full h-5 shadow-inner border-2 border-amber-300 overflow-hidden">
                             <div class="h-full rounded-full transition-all duration-1000 ease-linear @GetTimerBarClass()" 
                                  style="width: @GetTimerPercentage()%">
@@ -253,7 +253,7 @@
                 @if (currentQuestion != null)
                 {
                     <!-- Question -->
-                    <div class="mb-8">
+                    <div id="current-question" class="mb-8">
                         <div class="flex items-center justify-center mb-6">
                             <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg mr-4">
                                 <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="15" />
@@ -275,7 +275,7 @@
                     </div>
 
                     <!-- Answer Options -->
-                    <div class="space-y-3">
+                    <div id="answer-options" class="space-y-3">
                         @for (int i = 0; i < currentQuestion.Options.Count; i++)
                         {
                             var option = currentQuestion.Options[i];
@@ -296,7 +296,7 @@
                         }
                     </div>
                 <!-- Progress Bar -->
-                <div class="mb-6">
+                <div id="quiz-progress-bar" class="mb-6">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-sm font-bold font-comic text-amber-800">Question @(currentQuestionIndex + 1) of @questions.Count</span>
                         <span class="text-sm font-bold font-comic text-amber-800">@Math.Round((double)(currentQuestionIndex + 1) / questions.Count * 100)% Complete</span>
@@ -307,14 +307,14 @@
                     </div>
                 </div>
                     <!-- Navigation Buttons -->
-                    <div class="flex justify-between mt-8">
-                        <button @onclick="PreviousQuestion" 
+                    <div id="quiz-navigation" class="flex justify-between mt-8">
+                        <button id="previous-question-btn" @onclick="PreviousQuestion" 
                                 disabled="@(currentQuestionIndex == 0)"
                                 class="px-6 py-3 bg-amber-200 text-amber-800 rounded-xl font-bold font-comic hover:bg-amber-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             ← Previous
                         </button>
                         
-                        <button @onclick="NextQuestion" 
+                        <button id="next-question-btn" @onclick="NextQuestion" 
                                 disabled="@(currentQuestionIndex >= questions.Count - 1)"
                                 class="px-6 py-3 bg-tom-blue text-white rounded-xl font-bold font-comic hover:bg-tom-dark-blue transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             Next →
@@ -324,8 +324,8 @@
                     <!-- Submit Button -->
                     @if (currentQuestionIndex == questions.Count - 1)
                     {
-                        <div class="text-center mt-6">
-                            <button @onclick="SubmitQuiz" 
+                        <div id="submit-quiz-section" class="text-center mt-6">
+                            <button id="submit-quiz-btn" @onclick="SubmitQuiz" 
                                     class="cartoon-button px-8 py-4 text-white font-bold font-cartoon text-lg">
                                 🏁 Submit Quiz
                             </button>
@@ -338,7 +338,7 @@
         {
             <!-- Results -->
             <div id="quiz-results" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
-                <div class="text-center mb-8">
+                <div id="quiz-results-header" class="text-center mb-8">
                     <div class="flex justify-center items-center mb-6">
                         <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg mr-4">
                             <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
@@ -355,23 +355,23 @@
                 </div>
 
                 <!-- Score Summary -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                <div id="score-summary" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div id="correct-answers-card" class="text-center bg-amber-100 rounded-xl p-4">
                         <div class="text-3xl font-bold font-cartoon text-tom-blue">@result?.CorrectAnswers</div>
                         <div class="text-sm font-comic text-amber-800">Correct</div>
                     </div>
-                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                    <div id="wrong-answers-card" class="text-center bg-amber-100 rounded-xl p-4">
                         <div class="text-3xl font-bold font-cartoon text-cartoon-red">@result?.WrongAnswers</div>
                         <div class="text-sm font-comic text-amber-800">Wrong</div>
                     </div>
-                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                    <div id="score-percentage-card" class="text-center bg-amber-100 rounded-xl p-4">
                         <div class="text-3xl font-bold font-cartoon text-cartoon-yellow">@result?.ScorePercentage.ToString("F1")%</div>
                         <div class="text-sm font-comic text-amber-800">Score</div>
                     </div>
                 </div>
 
                 <!-- Grade and Time -->
-                <div class="text-center mb-8">
+                <div id="grade-time-section" class="text-center mb-8">
                     <div class="inline-flex items-center space-x-4 bg-gradient-to-r from-tom-blue to-cartoon-red text-white rounded-xl px-6 py-3">
                         <span class="text-2xl font-bold font-cartoon">Grade: @result?.Grade</span>
                         <span class="text-lg font-comic">Time: @result?.TimeTaken.ToString(@"mm\:ss")</span>
@@ -379,7 +379,7 @@
                 </div>
 
                 <!-- Detailed Results -->
-                <div class="mb-8">
+                <div id="detailed-results" class="mb-8">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-10 h-10 rounded-full overflow-hidden shadow-lg mr-3">
                             <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="15" />
@@ -420,12 +420,12 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button @onclick="RestartQuiz" 
+                <div id="quiz-action-buttons" class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="restart-quiz-btn" @onclick="RestartQuiz" 
                             class="cartoon-button px-6 py-3 text-white font-bold font-cartoon">
                         🔄 Take Another Quiz
                     </button>
-                    <button @onclick="GoHome" 
+                    <button id="go-home-btn" @onclick="GoHome" 
                             class="px-6 py-3 bg-amber-200 text-amber-800 rounded-xl font-bold font-comic hover:bg-amber-300 transition-colors">
                         🏠 Go Home
                     </button>

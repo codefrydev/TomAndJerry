@@ -12,7 +12,7 @@
 
 <div class="min-h-screen cartoon-bg">
     <!-- Header Section -->
-    <div class="tom-jerry-header">
+    <div id="stickers-header" class="tom-jerry-header">
         <div class="max-w-7xl mx-auto px-4 py-8">
             <div class="text-center text-white">
                 <div class="flex items-center justify-center mb-4">
@@ -20,13 +20,13 @@
                         <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
                     </div>
                 </div>
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold font-cartoon mb-3 text-white cartoon-text">Tom & Jerry Stickers</h1>
-                <p class="text-lg text-white/90 mb-6 max-w-2xl mx-auto font-comic">
+                <h1 id="stickers-main-title" class="text-3xl sm:text-4xl md:text-5xl font-bold font-cartoon mb-3 text-white cartoon-text">Tom & Jerry Stickers</h1>
+                <p id="stickers-description" class="text-lg text-white/90 mb-6 max-w-2xl mx-auto font-comic">
                     Collect all your favorite character moments! 🎭✨
                 </p>
                 
                 <!-- Back Button -->
-                <button @onclick="GoBack" 
+                <button id="back-to-episodes-btn" @onclick="GoBack" 
                         class="cartoon-button px-6 py-3 text-white font-bold font-cartoon text-base">
                     ← Back to Episodes
                 </button>
@@ -35,11 +35,11 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div id="stickers-main-content" class="max-w-7xl mx-auto px-4 py-8">
         <!-- Filter Section -->
-        <div class="mb-8">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
-                <button @onclick="() => FilterByCategory(string.Empty)" 
+        <div id="filter-section" class="mb-8">
+            <div id="filter-buttons" class="flex flex-wrap items-center justify-center gap-3 mb-6">
+                <button id="filter-all-stickers-btn" @onclick="() => FilterByCategory(string.Empty)" 
                         class="px-4 py-2 text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded @(string.IsNullOrEmpty(selectedCategory) ? "ring-2 ring-white" : "")">
                     All Stickers
                 </button>
@@ -53,7 +53,7 @@
             </div>
             
             <!-- Stats -->
-            <div class="text-center mb-6">
+            <div id="stickers-stats" class="text-center mb-6">
                 <p class="text-amber-800 font-comic font-semibold">
                     Showing @filteredStickers.Count() of @allStickers.Count() stickers
                     @if (!string.IsNullOrEmpty(selectedCategory))
@@ -65,13 +65,15 @@
         </div>
 
         <!-- Sticker Gallery -->
-        <StickerGallery MaxStickers="24" Category="@selectedCategory" OnStickerSelected="OnStickerSelected" />
+        <div id="sticker-gallery-container">
+            <StickerGallery MaxStickers="24" Category="@selectedCategory" OnStickerSelected="OnStickerSelected" />
+        </div>
 
         <!-- Load More Button -->
         @if (filteredStickers.Count() > 12)
         {
-            <div class="text-center mt-8">
-                <button @onclick="LoadMoreStickers" 
+            <div id="load-more-section" class="text-center mt-8">
+                <button id="load-more-stickers-btn" @onclick="LoadMoreStickers" 
                         class="cartoon-button px-8 py-4 text-white font-bold font-cartoon text-lg">
                     Load More Stickers 🎨
                 </button>

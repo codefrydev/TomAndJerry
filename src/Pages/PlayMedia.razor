@@ -8,12 +8,12 @@
 <PageTitle>@(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry") - Tom & Jerry</PageTitle>
 
 <div class="min-h-screen cartoon-bg">
-    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-2 sm:py-4 lg:py-6">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+    <div id="playmedia-main-container" class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-2 sm:py-4 lg:py-6">
+        <div id="playmedia-grid" class="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <!-- Main Content Area -->
-            <div class="lg:col-span-3 space-y-3 sm:space-y-4 lg:space-y-6">
+            <div id="main-content-area" class="lg:col-span-3 space-y-3 sm:space-y-4 lg:space-y-6">
                 <!-- Video Player - Responsive -->
-                <div class="sticky top-2 sm:top-4 z-10">
+                <div id="video-player-container" class="sticky top-2 sm:top-4 z-10">
                     <div class="relative bg-black rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl border-2 sm:border-4 border-jerry-brown">
                         <div class="video-container">
                             <iframe src="@GetEmbeddableUrl(currentVideo?.VideoUrl ?? "")"
@@ -28,13 +28,13 @@
                 </div>
                 
                 <!-- Video Title and Info -->
-                <div class="tom-jerry-card p-3 sm:p-4 lg:p-6">
+                <div id="video-info-card" class="tom-jerry-card p-3 sm:p-4 lg:p-6">
                     <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold font-cartoon text-amber-800 leading-tight mb-3 sm:mb-4 lg:mb-6 cartoon-text">
                         @(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry Episode")
                     </h1>
                     
                     <!-- Video Stats and Actions -->
-                    <div class="flex flex-col space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+                    <div id="video-stats-actions" class="flex flex-col space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                         <!-- Stats Row -->
                         <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-amber-800 font-semibold">
                             <div class="flex items-center space-x-2">
@@ -64,7 +64,7 @@
                         </div>
                         
                         <!-- Action Buttons - Mobile Optimized -->
-                        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <div id="video-action-buttons" class="flex flex-wrap items-center gap-2 sm:gap-3">
                             <button class="flex items-center justify-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow rounded-full transition-all duration-200 font-bold font-comic text-amber-800 hover:text-amber-900 text-xs sm:text-sm cartoon-rounded min-h-[44px] min-w-[44px]">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
@@ -93,7 +93,7 @@
                     </div>
                     
                     <!-- Channel Info -->
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 sm:py-6 border-t border-gray-200 space-y-4 sm:space-y-0">
+                    <div id="channel-info" class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 sm:py-6 border-t border-gray-200 space-y-4 sm:space-y-0">
                         <div class="flex items-center space-x-3 sm:space-x-4">
                             <div class="relative">
                                 <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full shadow-lg overflow-hidden ring-2 ring-red-100">
@@ -125,7 +125,7 @@
                 </div>
                 
                 <!-- Video Description -->
-                <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+                <div id="video-description" class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
                     <div class="flex items-center justify-between mb-3 sm:mb-4">
                         <h3 class="text-lg sm:text-xl font-bold text-gray-900">Description</h3>
                         <button class="text-xs sm:text-sm text-red-600 hover:text-red-800 font-semibold px-2 sm:px-3 py-1 sm:py-2 rounded-full hover:bg-red-50 transition-colors min-h-[44px]">
@@ -146,7 +146,7 @@
                 </div>
                 
                 <!-- Comments Section -->
-                <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
+                <div id="comments-section" class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
                     <div class="p-4 sm:p-6 border-b border-gray-200">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                             <div class="flex items-center space-x-2 sm:space-x-3">
@@ -214,10 +214,10 @@
             </div>
             
             <!-- Sidebar -->
-            <div class="lg:col-span-1">
+            <div id="sidebar" class="lg:col-span-1">
                 <div class="sticky top-4 sm:top-6 space-y-4 sm:space-y-6 max-h-screen overflow-y-auto">
                     <!-- Autoplay Toggle -->
-                    <div class="tom-jerry-card p-3 sm:p-4">
+                    <div id="autoplay-toggle" class="tom-jerry-card p-3 sm:p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2 sm:space-x-3">
                                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-soft-red rounded-full flex items-center justify-center cartoon-rounded">
@@ -237,7 +237,7 @@
                     </div>
                     
                     <!-- Video List -->
-                    <div class="space-y-3 sm:space-y-4">
+                    <div id="related-videos-list" class="space-y-3 sm:space-y-4">
                         @foreach (var item in randomVideos)
                         {
                             <div @onclick="()=>GoTOPage(item)" class="cursor-pointer group">
@@ -247,10 +247,10 @@
                     </div>
                     
                     <!-- Load More Button -->
-                    <div class="text-center">
+                    <div id="load-more-videos-section" class="text-center">
                         @if (hasMoreVideos)
                         {
-                            <button @onclick="LoadMoreVideos" 
+                            <button id="load-more-videos-btn" @onclick="LoadMoreVideos" 
                                     disabled="@isLoadingMore"
                                     class="px-4 sm:px-6 py-2 sm:py-3 bg-soft-blue hover:bg-cartoon-yellow text-amber-800 rounded-full font-bold font-comic transition-colors cartoon-rounded disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm min-h-[44px]">
                                 @if (isLoadingMore)
