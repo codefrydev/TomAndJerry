@@ -278,7 +278,7 @@
                         </div>
                         <div>
                             <h2 class="text-2xl sm:text-3xl font-bold font-cartoon text-amber-800 cartoon-text">Featured Episodes</h2>
-                            <p class="text-amber-900 font-comic text-base sm:text-lg font-semibold">Randomly selected classics that never get old! 🎭</p>
+                            <p class="text-amber-900 font-comic text-base sm:text-lg font-semibold">Selected classics that never get old! 🎭</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-3">
@@ -286,7 +286,6 @@
                                 class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded">
                             🔄 Refresh Featured
                         </button>
-                        <span class="hidden sm:inline text-sm text-amber-800 font-comic bg-cartoon-yellow px-3 py-1 rounded-full font-semibold">Random Selection</span>
                         <div class="w-3 h-3 bg-cartoon-red rounded-full animate-pulse cartoon-rounded"></div>
                     </div>
                 </div>
@@ -349,13 +348,16 @@
                     
                     <!-- Filter Options -->
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <button class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded">
+                        <button @onclick="@(() => ApplyFilter("All"))" 
+                                class="@GetFilterButtonClass("All")">
                             All
                         </button>
-                        <button class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-soft-blue text-amber-800 rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-amber-800 cartoon-rounded">
+                        <button @onclick="@(() => ApplyFilter("Classic"))" 
+                                class="@GetFilterButtonClass("Classic")">
                             Classic
                         </button>
-                        <button class="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-soft-blue text-amber-800 rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-amber-800 cartoon-rounded">
+                        <button @onclick="@(() => ApplyFilter("Modern"))" 
+                                class="@GetFilterButtonClass("Modern")">
                             Modern
                         </button>
                     </div>
@@ -363,7 +365,7 @@
                 
                 <!-- All Videos Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-                    @foreach (var item in StateService.CurrentVideos)
+                    @foreach (var item in filteredVideos)
                     {
                         <Thumbnail VideoModel="@item"/>
                     }
@@ -377,6 +379,8 @@
 @code
 {
     private string heroSearchTerm = string.Empty;
+    private string activeFilter = "All";
+    private IEnumerable<Video> filteredVideos = Enumerable.Empty<Video>();
 
     public void GoTOPage(Video video)
     {
@@ -472,6 +476,48 @@
         await StateService.RefreshFeaturedVideosAsync(StateService.CurrentVideos, 10);
     }
 
+    private void ApplyFilter(string filter)
+    {
+        activeFilter = filter;
+        
+        if (!StateService.CurrentVideos.Any())
+        {
+            filteredVideos = Enumerable.Empty<Video>();
+            return;
+        }
+
+        var videos = StateService.CurrentVideos.ToList();
+        
+        switch (filter)
+        {
+            case "All":
+                // Sequential order (by ID)
+                filteredVideos = videos.OrderBy(v => int.Parse(v.Id)).ToList();
+                break;
+            case "Classic":
+                // Random order
+                var random = new Random();
+                filteredVideos = videos.OrderBy(x => random.Next()).ToList();
+                break;
+            case "Modern":
+                // Inverse order (newest first)
+                filteredVideos = videos.OrderByDescending(v => int.Parse(v.Id)).ToList();
+                break;
+            default:
+                filteredVideos = videos;
+                break;
+        }
+        
+        StateHasChanged();
+    }
+
+    private string GetFilterButtonClass(string filter)
+    {
+        return activeFilter == filter
+            ? "px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-tom-blue text-white rounded-2xl font-bold font-comic hover:bg-tom-dark-blue transition-colors cartoon-rounded"
+            : "px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm bg-soft-blue text-amber-800 rounded-2xl font-bold font-comic hover:bg-cartoon-yellow transition-colors border-2 border-amber-800 cartoon-rounded";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         StateService.OnStateChanged += StateHasChanged;
@@ -486,6 +532,9 @@
             
             // Set random featured videos
             await StateService.RefreshFeaturedVideosAsync(videos, 10);
+            
+            // Apply initial filter (All - sequential order)
+            ApplyFilter("All");
         }
         finally
         {
