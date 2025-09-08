@@ -1,0 +1,783 @@
+@page "/quiz"
+@using TomAndJerry.Services
+@using TomAndJerry.Model
+@using TomAndJerry.Component
+@inject IQuizService QuizService
+@inject NavigationManager nav
+@inject IJSRuntime JSRuntime
+@inject IStickerService StickerService
+
+<PageTitle>Tom & Jerry Quiz - Test Your Knowledge!</PageTitle>
+
+<div class="min-h-screen cartoon-bg">
+    <!-- Header Section -->
+    <div class="tom-jerry-header relative overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full bg-element"></div>
+            <div class="absolute top-20 -right-10 w-24 h-24 bg-cartoon-yellow/20 rounded-full bg-element" style="animation-delay: 1s"></div>
+            <div class="absolute bottom-10 left-1/4 w-16 h-16 bg-cartoon-red/20 rounded-full bg-element" style="animation-delay: 2s"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 py-12 relative z-10">
+            <div class="text-center text-white">
+                <!-- Character Stickers -->
+                <div class="flex justify-center items-center mb-6">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 hover:scale-110 hover:rotate-3">
+                        <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
+                    </div>
+                    <div class="mx-4 sm:mx-6 text-3xl sm:text-5xl font-bold font-cartoon cartoon-text animate-wiggle">
+                        <div class="relative">
+                            <span class="gradient-text bg-clip-text text-transparent drop-shadow-lg">🧠</span>
+                            <div class="absolute -top-2 -right-2 text-lg animate-bounce">⚡</div>
+                        </div>
+                    </div>
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-2xl transform transition-all duration-300 hover:scale-110 hover:-rotate-3">
+                        <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="10" />
+                    </div>
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold font-cartoon cartoon-text mb-4 animate-fadeInUp">
+                    <span class="gradient-text bg-clip-text text-transparent">
+                        Tom & Jerry Quiz
+                    </span>
+                </h1>
+                <p class="text-lg sm:text-xl text-white font-comic animate-fadeInUp drop-shadow-lg font-semibold" style="animation-delay: 0.2s">
+                    Test your knowledge of the classic cat and mouse duo! 🎭
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        @if (!quizStarted && !showResults)
+        {
+            <!-- Quiz Setup -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
+                <div class="text-center mb-8">
+                    <div class="relative w-24 h-24 mx-auto mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-r from-tom-blue to-cartoon-red rounded-full animate-pulse"></div>
+                        <div class="absolute inset-2 bg-white rounded-full flex items-center justify-center">
+                            <span class="text-4xl animate-bounce">🧠</span>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-cartoon text-amber-800 mb-3 cartoon-text">Ready to Test Your Knowledge?</h2>
+                    <p class="text-amber-900 font-comic text-lg sm:text-xl">Choose your quiz settings and let's begin the adventure! 🎭</p>
+                </div>
+
+                <!-- Question Count Selection -->
+                <div class="mb-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto mb-3 bg-tom-blue rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-white text-2xl">📊</span>
+                        </div>
+                        <h3 class="text-2xl font-bold font-cartoon text-amber-800">How Many Questions?</h3>
+                        <p class="text-amber-700 font-comic">Choose your quiz length</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @foreach (var option in questionCountOptions)
+                        {
+                            <button @onclick="@(() => SelectQuestionCount((int)option.Value))"
+                                    class="group relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 @(questionCount == (int)option.Value ? "border-tom-blue bg-tom-blue text-white shadow-lg" : "border-amber-300 bg-amber-50 text-amber-800 hover:border-tom-blue hover:bg-amber-100")">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">@option.Emoji</div>
+                                    <div class="font-bold font-cartoon text-lg">@option.Value</div>
+                                    <div class="text-sm font-comic">@option.Label</div>
+                                </div>
+                                @if (questionCount == (int)option.Value)
+                                {
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-cartoon-yellow rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm">✓</span>
+                                    </div>
+                                }
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Difficulty Selection -->
+                <div class="mb-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto mb-3 bg-cartoon-red rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-white text-2xl">⚡</span>
+                        </div>
+                        <h3 class="text-2xl font-bold font-cartoon text-amber-800">Difficulty Level</h3>
+                        <p class="text-amber-700 font-comic">How challenging do you want it?</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @foreach (var option in difficultyOptions)
+                        {
+                            <button @onclick="@(() => SelectDifficulty((string)option.Value))"
+                                    class="group relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 @(selectedDifficulty == (string)option.Value ? "border-cartoon-red bg-cartoon-red text-white shadow-lg" : "border-amber-300 bg-amber-50 text-amber-800 hover:border-cartoon-red hover:bg-amber-100")">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">@option.Emoji</div>
+                                    <div class="font-bold font-cartoon text-lg">@option.Label</div>
+                                    <div class="text-sm font-comic">@option.Description</div>
+                                </div>
+                                @if (selectedDifficulty == (string)option.Value)
+                                {
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-cartoon-yellow rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm">✓</span>
+                                    </div>
+                                }
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="mb-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto mb-3 bg-cartoon-yellow rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-white text-2xl">📚</span>
+                        </div>
+                        <h3 class="text-2xl font-bold font-cartoon text-amber-800">Quiz Category</h3>
+                        <p class="text-amber-700 font-comic">What topics interest you most?</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                        @foreach (var option in categoryOptions)
+                        {
+                            <button @onclick="@(() => SelectCategory((string)option.Value))"
+                                    class="group relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 @(selectedCategory == (string)option.Value ? "border-cartoon-yellow bg-cartoon-yellow text-white shadow-lg" : "border-amber-300 bg-amber-50 text-amber-800 hover:border-cartoon-yellow hover:bg-amber-100")">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">@option.Emoji</div>
+                                    <div class="font-bold font-cartoon text-sm">@option.Label</div>
+                                </div>
+                                @if (selectedCategory == (string)option.Value)
+                                {
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-cartoon-red rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm">✓</span>
+                                    </div>
+                                }
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Start Button with Preview -->
+                <div class="text-center">
+                    <div class="bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl p-4 mb-6 border-2 border-amber-300">
+                        <div class="flex items-center justify-center space-x-4 text-amber-800 font-comic">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold font-cartoon">@questionCount</div>
+                                <div class="text-sm">Questions</div>
+                            </div>
+                            <div class="text-2xl">×</div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold font-cartoon">@GetDifficultyEmoji()</div>
+                                <div class="text-sm">@GetDifficultyText()</div>
+                            </div>
+                            <div class="text-2xl">×</div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold font-cartoon">@GetCategoryEmoji()</div>
+                                <div class="text-sm">@GetCategoryText()</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button @onclick="StartQuiz" 
+                            class="group relative overflow-hidden cartoon-button px-12 py-4 text-white font-bold font-cartoon text-xl sm:text-2xl transform hover:scale-105 transition-all duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-r from-tom-blue via-cartoon-red to-cartoon-yellow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative flex items-center space-x-3">
+                            <span class="text-2xl animate-bounce">🚀</span>
+                            <span>Start Quiz Adventure!</span>
+                            <span class="text-2xl animate-bounce" style="animation-delay: 0.1s">🎭</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        }
+        else if (quizStarted && !showResults)
+        {
+            <!-- Quiz Questions -->
+            <div id="quiz-questions" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
+                
+
+                <!-- Visual Timer -->
+                <div class="mb-8">
+                    <div class="text-center mb-4">
+                        <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl px-6 py-3 shadow-lg border-2 border-amber-300">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-tom-blue to-cartoon-red flex items-center justify-center animate-pulse">
+                                <span class="text-white text-lg">⏱️</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold font-cartoon text-amber-800">@timeRemaining.ToString(@"mm\:ss")</div>
+                                <div class="text-sm font-comic text-amber-700">Time Remaining</div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cartoon-red to-cartoon-yellow flex items-center justify-center animate-pulse" style="animation-delay: 0.5s">
+                                <span class="text-white text-lg">🔥</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Animated Progress Bar -->
+                    <div class="relative">
+                        <div class="w-full bg-amber-200 rounded-full h-5 shadow-inner border-2 border-amber-300 overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-1000 ease-linear @GetTimerBarClass()" 
+                                 style="width: @GetTimerPercentage()%">
+                                <div class="h-full rounded-full @GetTimerBarAnimationClass() relative">
+                                    <!-- Shine effect -->
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Timer Labels -->
+                        <div class="flex justify-between mt-3 text-xs font-comic text-amber-700">
+                            <span class="flex items-center space-x-1">
+                                <span>⏰</span>
+                                <span>Time's Up!</span>
+                            </span>
+                            <span class="font-bold text-center px-2 py-1 bg-amber-100 rounded-full">@GetTimeStatus()</span>
+                            <span class="flex items-center space-x-1">
+                                <span>Full Time</span>
+                                <span>⏱️</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Urgency Indicator -->
+                        @if (IsTimeRunningLow())
+                        {
+                            <div class="absolute -top-3 -right-3 w-8 h-8 bg-cartoon-red rounded-full flex items-center justify-center animate-bounce shadow-lg border-2 border-white">
+                                <span class="text-white text-lg">⚠️</span>
+                            </div>
+                        }
+                        
+                        <!-- Time remaining indicator -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold font-comic text-amber-800 bg-white/90 px-2 py-1 rounded-full shadow-sm">
+                            @Math.Round(GetTimerPercentage())%
+                        </div>
+                    </div>
+                </div>
+
+                @if (currentQuestion != null)
+                {
+                    <!-- Question -->
+                    <div class="mb-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg mr-4">
+                                <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="15" />
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold font-cartoon text-amber-800 text-center flex-1">
+                                @currentQuestion.Question
+                            </h3>
+                            <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg ml-4">
+                                <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="12" />
+                            </div>
+                        </div>
+                        
+                        @if (!string.IsNullOrEmpty(currentQuestion.ImagePath))
+                        {
+                            <div class="text-center mb-6">
+                                <img src="@currentQuestion.ImagePath" alt="Question Image" class="max-w-full h-auto rounded-xl shadow-lg mx-auto">
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Answer Options -->
+                    <div class="space-y-3">
+                        @for (int i = 0; i < currentQuestion.Options.Count; i++)
+                        {
+                            var option = currentQuestion.Options[i];
+                            var optionIndex = i;
+                            <button id="answer-option-@optionIndex"
+                                    @onclick="@(() => SelectAnswer(optionIndex))"
+                                    class="w-full p-4 text-left border-2 rounded-xl font-comic text-lg transition-all duration-200 hover:shadow-md @GetOptionClass(optionIndex)">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold @GetOptionIconClass(optionIndex)">
+                                        @((char)('A' + optionIndex))
+                                    </div>
+                                    <div class="w-8 h-8 rounded-full overflow-hidden shadow-md">
+                                        <RandomSticker Category="@GetRandomCategory()" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="20" />
+                                    </div>
+                                    <span class="flex-1">@option</span>
+                                </div>
+                            </button>
+                        }
+                    </div>
+                <!-- Progress Bar -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-bold font-comic text-amber-800">Question @(currentQuestionIndex + 1) of @questions.Count</span>
+                        <span class="text-sm font-bold font-comic text-amber-800">@Math.Round((double)(currentQuestionIndex + 1) / questions.Count * 100)% Complete</span>
+                    </div>
+                    <div class="w-full bg-amber-200 rounded-full h-3">
+                        <div class="bg-gradient-to-r from-tom-blue to-cartoon-red h-3 rounded-full transition-all duration-300" 
+                             style="width: @(((double)(currentQuestionIndex + 1) / questions.Count) * 100)%"></div>
+                    </div>
+                </div>
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between mt-8">
+                        <button @onclick="PreviousQuestion" 
+                                disabled="@(currentQuestionIndex == 0)"
+                                class="px-6 py-3 bg-amber-200 text-amber-800 rounded-xl font-bold font-comic hover:bg-amber-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            ← Previous
+                        </button>
+                        
+                        <button @onclick="NextQuestion" 
+                                disabled="@(currentQuestionIndex >= questions.Count - 1)"
+                                class="px-6 py-3 bg-tom-blue text-white rounded-xl font-bold font-comic hover:bg-tom-dark-blue transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next →
+                        </button>
+                    </div>
+
+                    <!-- Submit Button -->
+                    @if (currentQuestionIndex == questions.Count - 1)
+                    {
+                        <div class="text-center mt-6">
+                            <button @onclick="SubmitQuiz" 
+                                    class="cartoon-button px-8 py-4 text-white font-bold font-cartoon text-lg">
+                                🏁 Submit Quiz
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+        }
+        else if (showResults)
+        {
+            <!-- Results -->
+            <div id="quiz-results" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 cartoon-rounded">
+                <div class="text-center mb-8">
+                    <div class="flex justify-center items-center mb-6">
+                        <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg mr-4">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="8" />
+                        </div>
+                        <div class="w-24 h-24 bg-gradient-to-r from-tom-blue to-cartoon-red rounded-full flex items-center justify-center">
+                            <span class="text-4xl">@GetResultEmoji()</span>
+                        </div>
+                        <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg ml-4">
+                            <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="10" />
+                        </div>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-cartoon text-amber-800 mb-2">Quiz Complete!</h2>
+                    <p class="text-amber-900 font-comic text-lg">@result?.Message</p>
+                </div>
+
+                <!-- Score Summary -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                        <div class="text-3xl font-bold font-cartoon text-tom-blue">@result?.CorrectAnswers</div>
+                        <div class="text-sm font-comic text-amber-800">Correct</div>
+                    </div>
+                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                        <div class="text-3xl font-bold font-cartoon text-cartoon-red">@result?.WrongAnswers</div>
+                        <div class="text-sm font-comic text-amber-800">Wrong</div>
+                    </div>
+                    <div class="text-center bg-amber-100 rounded-xl p-4">
+                        <div class="text-3xl font-bold font-cartoon text-cartoon-yellow">@result?.ScorePercentage.ToString("F1")%</div>
+                        <div class="text-sm font-comic text-amber-800">Score</div>
+                    </div>
+                </div>
+
+                <!-- Grade and Time -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center space-x-4 bg-gradient-to-r from-tom-blue to-cartoon-red text-white rounded-xl px-6 py-3">
+                        <span class="text-2xl font-bold font-cartoon">Grade: @result?.Grade</span>
+                        <span class="text-lg font-comic">Time: @result?.TimeTaken.ToString(@"mm\:ss")</span>
+                    </div>
+                </div>
+
+                <!-- Detailed Results -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="w-10 h-10 rounded-full overflow-hidden shadow-lg mr-3">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="15" />
+                        </div>
+                        <h3 class="text-xl font-bold font-cartoon text-amber-800">Detailed Results</h3>
+                        <div class="w-10 h-10 rounded-full overflow-hidden shadow-lg ml-3">
+                            <RandomSticker Category="playful" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="12" />
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        @foreach (var answer in result?.Answers ?? new List<QuizAnswer>())
+                        {
+                            <div class="border-2 rounded-xl p-4 @(answer.IsCorrect ? "border-green-300 bg-green-50" : "border-red-300 bg-red-50")">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white @(answer.IsCorrect ? "bg-green-500" : "bg-red-500")">
+                                        @(answer.IsCorrect ? "✓" : "✗")
+                                    </div>
+                                    <div class="w-8 h-8 rounded-full overflow-hidden shadow-md flex-shrink-0">
+                                        <RandomSticker Category="@GetRandomCategory()" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="25" />
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="font-bold font-comic text-amber-800 mb-1">@answer.Question</div>
+                                        <div class="text-sm text-amber-700 mb-1">
+                                            <span class="font-semibold">Your Answer:</span> @answer.SelectedAnswer
+                                        </div>
+                                        <div class="text-sm text-amber-700 mb-1">
+                                            <span class="font-semibold">Correct Answer:</span> @answer.CorrectAnswer
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(answer.Explanation))
+                                        {
+                                            <div class="text-sm text-amber-600 italic">@answer.Explanation</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button @onclick="RestartQuiz" 
+                            class="cartoon-button px-6 py-3 text-white font-bold font-cartoon">
+                        🔄 Take Another Quiz
+                    </button>
+                    <button @onclick="GoHome" 
+                            class="px-6 py-3 bg-amber-200 text-amber-800 rounded-xl font-bold font-comic hover:bg-amber-300 transition-colors">
+                        🏠 Go Home
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<QuizQuestion> questions = new();
+    private List<QuizAnswer> answers = new();
+    private QuizResult? result;
+    private QuizQuestion? currentQuestion;
+    private int currentQuestionIndex = 0;
+    private int questionCount = 10;
+    private string selectedDifficulty = "all";
+    private string selectedCategory = "all";
+    private bool quizStarted = false;
+    private bool showResults = false;
+    private TimeSpan timeRemaining = TimeSpan.Zero;
+    private DateTime quizStartTime;
+    private Timer? timer;
+
+    // Selection options
+    private readonly List<SelectionOption> questionCountOptions = new()
+    {
+        new() { Value = 5, Label = "Quick Quiz", Emoji = "⚡" },
+        new() { Value = 10, Label = "Standard", Emoji = "🎯" },
+        new() { Value = 15, Label = "Challenging", Emoji = "🔥" },
+        new() { Value = 20, Label = "Expert Level", Emoji = "🏆" }
+    };
+
+    private readonly List<SelectionOption> difficultyOptions = new()
+    {
+        new() { Value = "all", Label = "Mixed", Description = "All Levels", Emoji = "🎲" },
+        new() { Value = "easy", Label = "Easy", Description = "Beginner", Emoji = "😊" },
+        new() { Value = "medium", Label = "Medium", Description = "Intermediate", Emoji = "🤔" },
+        new() { Value = "hard", Label = "Hard", Description = "Expert", Emoji = "😤" }
+    };
+
+    private readonly List<SelectionOption> categoryOptions = new()
+    {
+        new() { Value = "all", Label = "All", Emoji = "🌟" },
+        new() { Value = "characters", Label = "Characters", Emoji = "🎭" },
+        new() { Value = "history", Label = "History", Emoji = "📜" },
+        new() { Value = "awards", Label = "Awards", Emoji = "🏆" },
+        new() { Value = "general", Label = "General", Emoji = "🎪" }
+    };
+
+    public class SelectionOption
+    {
+        public object Value { get; set; } = 0;
+        public string Label { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Emoji { get; set; } = string.Empty;
+    }
+
+    private async Task StartQuiz()
+    {
+        quizStarted = true;
+        showResults = false;
+        currentQuestionIndex = 0;
+        answers.Clear();
+        
+        // Load questions based on settings
+        if (selectedCategory == "all")
+        {
+            questions = await QuizService.GetQuizQuestionsAsync(questionCount, selectedDifficulty);
+        }
+        else
+        {
+            questions = await QuizService.GetQuestionsByCategoryAsync(selectedCategory, questionCount);
+        }
+
+        if (questions.Any())
+        {
+            currentQuestion = questions[0];
+            quizStartTime = DateTime.Now;
+            timeRemaining = TimeSpan.FromMinutes(questionCount * 0.5); // 30 seconds per question
+            StartTimer();
+            
+            // Scroll to quiz questions section with smooth animation
+            await Task.Delay(100); // Small delay to ensure DOM is updated
+            await JSRuntime.InvokeVoidAsync("scrollToElement", "quiz-questions");
+            
+            // Focus on the first answer option for better accessibility
+            await Task.Delay(300); // Wait for scroll animation to complete
+            await JSRuntime.InvokeVoidAsync("focusFirstAnswerOption");
+        }
+    }
+
+    private void StartTimer()
+    {
+        timer?.Dispose();
+        timer = new Timer(async _ =>
+        {
+            timeRemaining = timeRemaining.Subtract(TimeSpan.FromSeconds(1));
+            if (timeRemaining <= TimeSpan.Zero)
+            {
+                await SubmitQuiz();
+            }
+            await InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+    }
+
+    private void SelectAnswer(int optionIndex)
+    {
+        if (currentQuestion == null) return;
+
+        var existingAnswer = answers.FirstOrDefault(a => a.QuestionId == currentQuestion.Id);
+        if (existingAnswer != null)
+        {
+            existingAnswer.SelectedAnswer = currentQuestion.Options[optionIndex];
+            existingAnswer.IsCorrect = optionIndex == currentQuestion.CorrectAnswerIndex;
+        }
+        else
+        {
+            answers.Add(new QuizAnswer
+            {
+                QuestionId = currentQuestion.Id,
+                Question = currentQuestion.Question,
+                SelectedAnswer = currentQuestion.Options[optionIndex],
+                CorrectAnswer = currentQuestion.Options[currentQuestion.CorrectAnswerIndex],
+                IsCorrect = optionIndex == currentQuestion.CorrectAnswerIndex,
+                Explanation = currentQuestion.Explanation
+            });
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task NextQuestion()
+    {
+        if (currentQuestionIndex < questions.Count - 1)
+        {
+            currentQuestionIndex++;
+            currentQuestion = questions[currentQuestionIndex];
+            StateHasChanged();
+            
+            // Scroll to top of quiz questions section
+            await Task.Delay(50);
+            await JSRuntime.InvokeVoidAsync("scrollToElement", "quiz-questions");
+        }
+    }
+
+    private async Task PreviousQuestion()
+    {
+        if (currentQuestionIndex > 0)
+        {
+            currentQuestionIndex--;
+            currentQuestion = questions[currentQuestionIndex];
+            StateHasChanged();
+            
+            // Scroll to top of quiz questions section
+            await Task.Delay(50);
+            await JSRuntime.InvokeVoidAsync("scrollToElement", "quiz-questions");
+        }
+    }
+
+    private async Task SubmitQuiz()
+    {
+        timer?.Dispose();
+        var timeTaken = DateTime.Now - quizStartTime;
+        result = await QuizService.CalculateResultAsync(answers, timeTaken);
+        showResults = true;
+        quizStarted = false;
+        
+        // Scroll to results section
+        await Task.Delay(100); // Small delay to ensure DOM is updated
+        await JSRuntime.InvokeVoidAsync("scrollToElement", "quiz-results");
+    }
+
+    private void RestartQuiz()
+    {
+        quizStarted = false;
+        showResults = false;
+        questions.Clear();
+        answers.Clear();
+        currentQuestion = null;
+        currentQuestionIndex = 0;
+        result = null;
+        timer?.Dispose();
+    }
+
+    private void GoHome()
+    {
+        nav.NavigateTo("/");
+    }
+
+    private void SelectQuestionCount(int count)
+    {
+        questionCount = count;
+        StateHasChanged();
+    }
+
+    private void SelectDifficulty(string difficulty)
+    {
+        selectedDifficulty = difficulty;
+        StateHasChanged();
+    }
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+        StateHasChanged();
+    }
+
+    private string GetOptionClass(int optionIndex)
+    {
+        var answer = answers.FirstOrDefault(a => a.QuestionId == currentQuestion?.Id);
+        if (answer == null) return "border-amber-300 hover:border-tom-blue hover:bg-amber-50";
+        
+        if (answer.SelectedAnswer == currentQuestion?.Options[optionIndex])
+        {
+            return "border-tom-blue bg-tom-blue/10 shadow-md";
+        }
+        
+        return "border-amber-300 hover:border-tom-blue hover:bg-amber-50";
+    }
+
+    private string GetOptionIconClass(int optionIndex)
+    {
+        var answer = answers.FirstOrDefault(a => a.QuestionId == currentQuestion?.Id);
+        if (answer == null) return "border-amber-300 text-amber-800";
+        
+        if (answer.SelectedAnswer == currentQuestion?.Options[optionIndex])
+        {
+            return "border-tom-blue bg-tom-blue text-white";
+        }
+        
+        return "border-amber-300 text-amber-800";
+    }
+
+    private string GetResultEmoji()
+    {
+        if (result == null) return "🎯";
+        
+        return result.ScorePercentage switch
+        {
+            >= 90 => "🏆",
+            >= 80 => "🌟",
+            >= 70 => "👍",
+            >= 60 => "😊",
+            >= 50 => "📺",
+            _ => "🎬"
+        };
+    }
+
+    private string GetRandomCategory()
+    {
+        var categories = new[] { "classic", "playful", "general" };
+        var random = new Random();
+        return categories[random.Next(categories.Length)];
+    }
+
+    private string GetDifficultyEmoji()
+    {
+        return selectedDifficulty switch
+        {
+            "easy" => "😊",
+            "medium" => "🤔",
+            "hard" => "😤",
+            _ => "🎲"
+        };
+    }
+
+    private string GetDifficultyText()
+    {
+        return selectedDifficulty switch
+        {
+            "easy" => "Easy",
+            "medium" => "Medium",
+            "hard" => "Hard",
+            _ => "Mixed"
+        };
+    }
+
+    private string GetCategoryEmoji()
+    {
+        return selectedCategory switch
+        {
+            "characters" => "🎭",
+            "history" => "📜",
+            "awards" => "🏆",
+            "general" => "🎪",
+            _ => "🌟"
+        };
+    }
+
+    private string GetCategoryText()
+    {
+        return selectedCategory switch
+        {
+            "characters" => "Characters",
+            "history" => "History",
+            "awards" => "Awards",
+            "general" => "General",
+            _ => "All"
+        };
+    }
+
+    private double GetTimerPercentage()
+    {
+        if (timeRemaining <= TimeSpan.Zero) return 0;
+        
+        var totalTime = TimeSpan.FromMinutes(questionCount * 0.5); // 30 seconds per question
+        return (timeRemaining.TotalSeconds / totalTime.TotalSeconds) * 100;
+    }
+
+    private string GetTimerBarClass()
+    {
+        var percentage = GetTimerPercentage();
+        return percentage switch
+        {
+            > 50 => "shadow-lg",
+            > 25 => "shadow-md",
+            > 10 => "shadow-sm animate-pulse",
+            _ => "shadow-sm animate-pulse"
+        };
+    }
+
+    private string GetTimerBarAnimationClass()
+    {
+        var percentage = GetTimerPercentage();
+        return percentage switch
+        {
+            > 25 => "timer-bar-animation",
+            _ => "timer-bar-urgent timer-pulse"
+        };
+    }
+
+    private string GetTimeStatus()
+    {
+        var percentage = GetTimerPercentage();
+        return percentage switch
+        {
+            > 75 => "Plenty of Time! 😊",
+            > 50 => "Good Pace! 👍",
+            > 25 => "Hurry Up! ⚡",
+            > 10 => "Almost Out! 😰",
+            _ => "Time's Up! ⏰"
+        };
+    }
+
+    private bool IsTimeRunningLow()
+    {
+        return GetTimerPercentage() <= 25;
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}

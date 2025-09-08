@@ -52,6 +52,66 @@
     }
 }
 
+/* Quiz Timer Animations */
+.timer-bar-animation {
+    background: linear-gradient(90deg, #3B82F6, #EF4444, #F59E0B);
+    background-size: 200% 100%;
+    animation: timer-gradient 3s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.timer-bar-urgent {
+    background: linear-gradient(90deg, #EF4444, #F59E0B, #EF4444);
+    background-size: 200% 100%;
+    animation: timer-urgent 0.8s ease-in-out infinite;
+    box-shadow: 0 2px 12px rgba(239, 68, 68, 0.3);
+}
+
+@keyframes timer-gradient {
+    0% { 
+        background-position: 0% 50%; 
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+    50% { 
+        background-position: 100% 50%; 
+        box-shadow: 0 2px 12px rgba(245, 158, 11, 0.3);
+    }
+    100% { 
+        background-position: 0% 50%; 
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+}
+
+@keyframes timer-urgent {
+    0% { 
+        background-position: 0% 50%; 
+        box-shadow: 0 2px 12px rgba(239, 68, 68, 0.3);
+    }
+    50% { 
+        background-position: 100% 50%; 
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+    }
+    100% { 
+        background-position: 0% 50%; 
+        box-shadow: 0 2px 12px rgba(239, 68, 68, 0.3);
+    }
+}
+
+.timer-pulse {
+    animation: timer-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.02); 
+        opacity: 0.9;
+    }
+}
+
 @keyframes pulse {
     0%, 100% {
         opacity: 1;

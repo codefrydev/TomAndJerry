@@ -2,11 +2,13 @@
 @using TomAndJerry.Services
 @using TomAndJerry.Model
 @using TomAndJerry.Component
+@using TomAndJerry.Utils
 @inject NavigationManager nav
 @inject IVideoService VideoService
 @inject IStateService StateService
 @inject IJSRuntime JSRuntime
 @inject IStickerService StickerService
+@inject IRandomFactsService RandomFactsService
 <PageTitle>Home - Tom & Jerry</PageTitle>
 
 <div class="min-h-screen cartoon-bg">
@@ -129,6 +131,10 @@
                             <button @onclick="ScrollToAllEpisodes" 
                                     class="px-6 sm:px-8 py-3 sm:py-4 bg-soft-blue text-amber-800 rounded-2xl hover:bg-cartoon-yellow transition-colors font-bold font-comic text-base sm:text-lg border-2 border-amber-800 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                 📺 View All
+                            </button>
+                            <button @onclick="GoToQuiz" 
+                                    class="px-6 sm:px-8 py-3 sm:py-4 bg-cartoon-pink text-white rounded-2xl hover:bg-cartoon-red transition-colors font-bold font-comic text-base sm:text-lg border-2 border-white/30 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                🧠 Take Quiz
                             </button>
                             <button @onclick="ShowRandomFact" 
                                     class="px-6 py-4 bg-cartoon-yellow/20 backdrop-blur-sm text-white rounded-2xl hover:bg-cartoon-yellow/30 transition-all font-bold font-comic text-lg border-2 border-cartoon-yellow/30">
@@ -427,6 +433,11 @@
         await ScrollToSection("sticker-gallery");
     }
 
+    private void GoToQuiz()
+    {
+        nav.NavigateTo("quiz");
+    }
+
     private void RefreshStickers()
     {
         // This will trigger a refresh of the sticker gallery
@@ -457,22 +468,7 @@
 
     private async Task ShowRandomFact()
     {
-        string[] facts = {
-            "Tom & Jerry won 7 Academy Awards for Best Animated Short Film!",
-            "The original creators were William Hanna and Joseph Barbera, who later founded Hanna-Barbera.",
-            "Tom's full name is Thomas Cat, and Jerry's full name is Gerald Mouse.",
-            "The show was originally called 'Puss Gets the Boot' before becoming Tom & Jerry.",
-            "Over 160 episodes were produced between 1940 and 1958.",
-            "Tom & Jerry has been translated into over 30 languages worldwide.",
-            "The characters rarely speak - most communication is through actions and expressions.",
-            "Tom & Jerry was one of the first cartoons to use limited animation techniques.",
-            "The show has been rebooted multiple times with different animation styles.",
-            "Tom & Jerry merchandise has generated billions in revenue over the decades."
-        };
-        
-        var random = new Random();
-        var fact = facts[random.Next(facts.Length)];
-        
+        var fact = RandomFactsService.GetRandomFact();
         await snackbar.ShowAsync("🎭 Fun Fact", fact, "💡", SnackbarType.Info, 6000);
     }
 

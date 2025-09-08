@@ -17,6 +17,29 @@ window.addClickOutsideHandler = function (dotnetHelper) {
 window.scrollToElement = function (elementId) {
     const element = document.getElementById(elementId);
     if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Account for fixed header height (approximately 64px + some padding)
+        const headerHeight = 120;
+        const elementPosition = element.offsetTop - headerHeight;
+        
+        window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+        });
+    }
+};
+
+window.focusFirstAnswerOption = function () {
+    const firstAnswerOption = document.getElementById('answer-option-0');
+    if (firstAnswerOption) {
+        firstAnswerOption.focus();
+        // Add a subtle highlight effect
+        firstAnswerOption.style.transform = 'scale(1.02)';
+        firstAnswerOption.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.5)';
+        
+        // Remove the highlight after a short delay
+        setTimeout(() => {
+            firstAnswerOption.style.transform = '';
+            firstAnswerOption.style.boxShadow = '';
+        }, 2000);
     }
 };

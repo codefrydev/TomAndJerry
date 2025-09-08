@@ -1,9 +1,12 @@
 @page "/stickers"
 @using TomAndJerry.Services
 @using TomAndJerry.Model
+@using TomAndJerry.Component
+@using TomAndJerry.Utils
 @inject IStickerService StickerService
 @inject NavigationManager Nav
 @inject IJSRuntime JSRuntime
+@inject IRandomFactsService RandomFactsService
 
 <PageTitle>Tom & Jerry Stickers - Tom & Jerry</PageTitle>
 
@@ -77,12 +80,16 @@
     </div>
 </div>
 
+<!-- Snackbar Component -->
+<Snackbar @ref="snackbar" />
+
 @code {
     private List<Sticker> allStickers = new();
     private List<Sticker> filteredStickers = new();
     private List<string> availableCategories = new();
     private string selectedCategory = string.Empty;
     private int currentDisplayCount = 12;
+    private Snackbar snackbar = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -119,11 +126,12 @@
 
     private async Task OnStickerSelected(Sticker sticker)
     {
-        await JSRuntime.InvokeVoidAsync("alert", $"You selected: {sticker.DisplayName}!\nCategory: {sticker.Category}");
+        var fact = RandomFactsService.GetRandomFact();
+        await snackbar.ShowAsync("🎭 Fun Fact", fact, "💡", SnackbarType.Info, 7000);
     }
 
     private void GoBack()
     {
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("");
     }
 }

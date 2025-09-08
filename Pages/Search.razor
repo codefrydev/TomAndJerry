@@ -1,4 +1,4 @@
-﻿@page "/Search/{searchterm}"
+﻿@page "/Search/{searchterm?}"
 @using TomAndJerry.Services
 @inject NavigationManager nav
 @inject IVideoService VideoService
@@ -26,8 +26,17 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900">Episodes Found</h2>
-                            <p class="text-gray-600">@StateService.FilteredVideos.Count() results for "@searchterm"</p>
+                            <h2 class="text-xl font-bold text-gray-900">@(string.IsNullOrWhiteSpace(searchterm) ? "All Episodes" : "Episodes Found")</h2>
+                            <p class="text-gray-600">
+                                @if (string.IsNullOrWhiteSpace(searchterm))
+                                {
+                                    <text>@StateService.FilteredVideos.Count() episodes available</text>
+                                }
+                                else
+                                {
+                                    <text>@StateService.FilteredVideos.Count() results for "@searchterm"</text>
+                                }
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -118,9 +127,20 @@
         try
         {
             await VideoService.InitializeAsync();
-            var searchResults = await SearchService.SearchAsync(searchterm);
-            await StateService.SetFilteredVideosAsync(searchResults);
-            await StateService.SetSearchTermAsync(searchterm);
+            
+            // If search term is empty, show all videos; otherwise perform search
+            if (string.IsNullOrWhiteSpace(searchterm))
+            {
+                var allVideos = await VideoService.GetAllVideosAsync();
+                await StateService.SetFilteredVideosAsync(allVideos);
+                await StateService.SetSearchTermAsync("");
+            }
+            else
+            {
+                var searchResults = await SearchService.SearchAsync(searchterm);
+                await StateService.SetFilteredVideosAsync(searchResults);
+                await StateService.SetSearchTermAsync(searchterm);
+            }
         }
         finally
         {
