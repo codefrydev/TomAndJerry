@@ -279,6 +279,29 @@ input:focus {
     .video-container {
         border-radius: 0.75rem;
     }
+    
+    /* Mobile video player improvements */
+    .video-container {
+        padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
+        border-radius: 0.5rem;
+    }
+    
+    /* Mobile button improvements */
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Mobile text improvements */
+    .text-responsive {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    
+    /* Mobile spacing improvements */
+    .space-y-mobile > * + * {
+        margin-top: 0.75rem;
+    }
 }
 
 /* Tablet-specific improvements */
@@ -289,6 +312,49 @@ input:focus {
     
     .cartoon-button {
         padding: 1rem 2rem;
+    }
+    
+    /* Tablet video player improvements */
+    .video-container {
+        border-radius: 1rem;
+    }
+    
+    /* Tablet layout improvements */
+    .grid-responsive {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* Large screen improvements */
+@media (min-width: 1025px) {
+    .grid-responsive {
+        grid-template-columns: 3fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Extra responsive video container */
+@media (max-width: 480px) {
+    .video-container {
+        padding-bottom: 60%; /* Slightly taller for very small screens */
+        border-radius: 0.5rem;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    button {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    .cartoon-button:hover {
+        transform: none; /* Disable hover effects on touch devices */
+    }
+    
+    .tom-jerry-card:hover {
+        transform: none; /* Disable hover effects on touch devices */
     }
 }
 
