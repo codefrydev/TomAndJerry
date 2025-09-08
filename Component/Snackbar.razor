@@ -1,0 +1,95 @@
+@using Microsoft.JSInterop
+@using TomAndJerry.Component
+@inject IJSRuntime JSRuntime
+
+<div class="snackbar-container" id="snackbar-container">
+    @if (IsVisible)
+    {
+        <div class="snackbar @GetSnackbarClass()" id="snackbar">
+            <div class="snackbar-content">
+                <div class="snackbar-icon">
+                    @if (!string.IsNullOrEmpty(Icon))
+                    {
+                        <span class="text-2xl">@Icon</span>
+                    }
+                </div>
+                <div class="snackbar-message">
+                    <div class="snackbar-title">@Title</div>
+                    <div class="snackbar-text">@Message</div>
+                </div>
+                <button class="snackbar-close" @onclick="Hide">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Message { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "";
+    [Parameter] public SnackbarType Type { get; set; } = SnackbarType.Info;
+    [Parameter] public int Duration { get; set; } = 5000; // 5 seconds
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private bool IsVisible { get; set; } = false;
+    private Timer? _timer;
+
+    public async Task ShowAsync(string title, string message, string icon = "", SnackbarType type = SnackbarType.Info, int duration = 5000)
+    {
+        Title = title;
+        Message = message;
+        Icon = icon;
+        Type = type;
+        Duration = duration;
+        IsVisible = true;
+        
+        StateHasChanged();
+        
+        // Auto-hide after duration
+        if (Duration > 0)
+        {
+            _timer?.Dispose();
+            _timer = new Timer(async _ => await InvokeAsync(Hide), null, Duration, Timeout.Infinite);
+        }
+        
+        // Trigger slide-in animation
+        await Task.Delay(50);
+        await JSRuntime.InvokeVoidAsync("showSnackbar");
+    }
+
+    public async Task Hide()
+    {
+        if (!IsVisible) return;
+        
+        await JSRuntime.InvokeVoidAsync("hideSnackbar");
+        
+        await Task.Delay(300); // Wait for animation to complete
+        IsVisible = false;
+        _timer?.Dispose();
+        _timer = null;
+        
+        StateHasChanged();
+        await OnClose.InvokeAsync();
+    }
+
+    private string GetSnackbarClass()
+    {
+        return Type switch
+        {
+            SnackbarType.Success => "snackbar-success",
+            SnackbarType.Error => "snackbar-error",
+            SnackbarType.Warning => "snackbar-warning",
+            SnackbarType.Info => "snackbar-info",
+            _ => "snackbar-info"
+        };
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}

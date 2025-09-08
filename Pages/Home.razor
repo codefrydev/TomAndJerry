@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using TomAndJerry.Services
 @using TomAndJerry.Model
+@using TomAndJerry.Component
 @inject NavigationManager nav
 @inject IVideoService VideoService
 @inject IStateService StateService
@@ -375,12 +376,15 @@
     </div>
 </div>
 
+<!-- Snackbar Component -->
+<Snackbar @ref="snackbar" />
 
 @code
 {
     private string heroSearchTerm = string.Empty;
     private string activeFilter = "All";
     private IEnumerable<Video> filteredVideos = Enumerable.Empty<Video>();
+    private Snackbar snackbar = new();
 
     public void GoTOPage(Video video)
     {
@@ -438,7 +442,7 @@
     private async Task OnStickerSelected(Sticker sticker)
     {
         // Handle sticker selection - could show a modal, navigate, or perform an action
-        await JSRuntime.InvokeVoidAsync("alert", $"You selected: {sticker.DisplayName}!");
+        await snackbar.ShowAsync("Sticker Selected!", $"You selected: {sticker.DisplayName}!", "🎭", SnackbarType.Success, 4000);
     }
 
     private async Task ShowCharacterInfo(string character)
@@ -447,7 +451,8 @@
             ? "Tom is a blue-grey cat who lives in the house with his owner. Despite his best efforts, he can never catch Jerry, but that doesn't stop him from trying! Tom is known for his elaborate schemes and comedic failures."
             : "Jerry is a small brown mouse who lives in the house. He's incredibly clever and always manages to outsmart Tom with his quick thinking and resourcefulness. Jerry loves cheese and enjoys playing tricks on Tom.";
         
-        await JSRuntime.InvokeVoidAsync("alert", $"{character} Info:\n\n{info}");
+        string icon = character == "Tom" ? "🐱" : "🐭";
+        await snackbar.ShowAsync($"{character} Info", info, icon, SnackbarType.Info, 8000);
     }
 
     private async Task ShowRandomFact()
@@ -468,7 +473,7 @@
         var random = new Random();
         var fact = facts[random.Next(facts.Length)];
         
-        await JSRuntime.InvokeVoidAsync("alert", $"🎭 Fun Fact:\n\n{fact}");
+        await snackbar.ShowAsync("🎭 Fun Fact", fact, "💡", SnackbarType.Info, 6000);
     }
 
     private async Task RefreshFeaturedEpisodes()
