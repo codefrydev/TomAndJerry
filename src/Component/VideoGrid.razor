@@ -44,12 +44,3 @@
     }
 </div>
 
-@code {
-    protected override async Task OnComponentInitializedAsync()
-    {
-        if (!AppService.IsInitialized)
-        {
-            await AppService.InitializeApplicationAsync();
-        }
-    }
-}
