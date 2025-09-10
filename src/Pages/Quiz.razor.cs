@@ -184,7 +184,7 @@ public partial class Quiz : IDisposable
 
     private void GoHome()
     {
-        nav.NavigateTo("/");
+        nav.NavigateTo("");
     }
 
     private void SelectQuestionCount(int count)
