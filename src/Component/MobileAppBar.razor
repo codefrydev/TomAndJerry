@@ -1,0 +1,113 @@
+@using TomAndJerry.Services
+@using TomAndJerry.Model
+@inject IStateService StateService
+@inject NavigationManager nav
+@inject IJSRuntime JSRuntime
+
+<header id="mobile-app-header" class="fixed top-0 left-0 right-0 z-50 tom-jerry-header shadow-lg">
+    <div class="max-w-7xl mx-auto px-2">
+        <div class="flex items-center justify-between h-14">
+            <!-- Left Section - Logo -->
+            <div id="mobile-header-left-section" class="flex items-center space-x-2">
+                <div id="mobile-app-logo" class="flex items-center space-x-2 cursor-pointer" @onclick="GoToHomePage">
+                    <div class="tom-character">
+                        <div class="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white/30 shadow-lg">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="12" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Section - Search (Compact) -->
+            <div id="mobile-header-search-section" class="flex-1 max-w-xs mx-2">
+                <RealTimeSearch />
+            </div>
+            
+            <!-- Right Section - Mobile Menu -->
+            <div id="mobile-header-right-section" class="flex items-center space-x-1">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" @onclick="ToggleMobileMenu" 
+                        class="flex items-center justify-center w-10 h-10 bg-cartoon-yellow text-amber-800 rounded-xl font-bold font-comic hover:bg-cartoon-orange transition-colors cartoon-rounded">
+                    <span class="text-lg">☰</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Dropdown -->
+        @if (isMobileMenuOpen)
+        {
+            <div class="mobile-menu-dropdown bg-white/95 backdrop-blur-md border-t border-white/20 shadow-lg">
+                <div class="px-4 py-3 space-y-2">
+                    <button @onclick="GoToHomePage" 
+                            class="w-full flex items-center space-x-3 text-slate-800 hover:text-slate-900 transition-colors font-comic text-base p-2 rounded-lg hover:bg-white/20">
+                        <span class="text-xl">🎬</span>
+                        <span>All Episodes</span>
+                    </button>
+                    <button @onclick="GoToStickers" 
+                            class="w-full flex items-center space-x-3 text-slate-800 hover:text-slate-900 transition-colors font-comic text-base p-2 rounded-lg hover:bg-white/20">
+                        <span class="text-xl">🎭</span>
+                        <span>Sticker Gallery</span>
+                    </button>
+                    <button @onclick="GoToSearch" 
+                            class="w-full flex items-center space-x-3 text-slate-800 hover:text-slate-900 transition-colors font-comic text-base p-2 rounded-lg hover:bg-white/20">
+                        <span class="text-xl">🔍</span>
+                        <span>Search Episodes</span>
+                    </button>
+                    <button @onclick="GoToQuiz" 
+                            class="w-full flex items-center space-x-3 text-slate-800 hover:text-slate-900 transition-colors font-comic text-base p-2 rounded-lg hover:bg-white/20">
+                        <span class="text-xl">🧠</span>
+                        <span>Quiz</span>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</header>
+
+@code {
+    private bool isMobileMenuOpen = false;
+
+    void GoToHomePage()
+    {
+        nav.NavigateTo("");
+        CloseMobileMenu();
+    }
+    
+    void GoToStickers()
+    {
+        nav.NavigateTo("stickers");
+        CloseMobileMenu();
+    }
+    
+    void GoToSearch()
+    {
+        nav.NavigateTo("Search/");
+        CloseMobileMenu();
+    }
+    
+    void GoToQuiz()
+    {
+        nav.NavigateTo("quiz");
+        CloseMobileMenu();
+    }
+
+    void ToggleMobileMenu()
+    {
+        isMobileMenuOpen = !isMobileMenuOpen;
+    }
+
+    void CloseMobileMenu()
+    {
+        isMobileMenuOpen = false;
+    }
+
+    protected override void OnInitialized()
+    {
+        StateService.OnStateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnStateChanged -= StateHasChanged;
+    }
+}

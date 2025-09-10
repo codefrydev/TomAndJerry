@@ -1,0 +1,71 @@
+@using TomAndJerry.Services
+@using TomAndJerry.Model
+@inject IStateService StateService
+@inject NavigationManager nav
+@inject IJSRuntime JSRuntime
+
+<header id="tablet-app-header" class="fixed top-0 left-0 right-0 z-50 tom-jerry-header shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Left Section -->
+            <div id="tablet-header-left-section" class="flex items-center space-x-3">
+                <!-- Logo -->
+                <div id="tablet-app-logo" class="flex items-center space-x-3 cursor-pointer" @onclick="GoToHomePage">
+                    <div class="tom-character">
+                        <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 shadow-lg">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover" AutoRefresh="true" RefreshIntervalSeconds="12" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Section - Search -->
+            <div id="tablet-header-search-section" class="flex-1 max-w-md mx-4">
+                <RealTimeSearch />
+            </div>
+            
+            <!-- Right Section -->
+            <div id="tablet-header-right-section" class="flex items-center space-x-2">
+                <!-- Navigation Buttons -->
+                <button @onclick="GoToStickers" 
+                        class="flex items-center space-x-2 bg-cartoon-yellow text-amber-800 rounded-xl px-3 py-2 font-bold font-comic hover:bg-cartoon-orange transition-colors cartoon-rounded">
+                    <span class="text-lg">🎭</span>
+                    <span class="text-sm">Stickers</span>
+                </button>
+                
+                <button @onclick="GoToQuiz" 
+                        class="flex items-center space-x-2 bg-cartoon-yellow text-amber-800 rounded-xl px-3 py-2 font-bold font-comic hover:bg-cartoon-orange transition-colors cartoon-rounded">
+                    <span class="text-lg">🧠</span>
+                    <span class="text-sm">Quiz</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+@code {
+    void GoToHomePage()
+    {
+        nav.NavigateTo("");
+    }
+    
+    void GoToStickers()
+    {
+        nav.NavigateTo("stickers");
+    }
+    
+    void GoToQuiz()
+    {
+        nav.NavigateTo("quiz");
+    }
+
+    protected override void OnInitialized()
+    {
+        StateService.OnStateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnStateChanged -= StateHasChanged;
+    }
+}

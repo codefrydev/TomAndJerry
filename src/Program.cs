@@ -19,6 +19,7 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IStickerService, StickerService>();
 builder.Services.AddScoped<IRandomFactsService, RandomFactsService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IResponsiveService, ResponsiveService>();
 
 // Legacy Data class for backward compatibility (will be removed in future iterations)
 builder.Services.AddSingleton<TomAndJerry.DataBase.Data>();

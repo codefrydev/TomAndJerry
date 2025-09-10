@@ -1,22 +1,54 @@
 ﻿@using TomAndJerry.Component
+@using TomAndJerry.Services
+@inject IResponsiveService ResponsiveService
 @inherits LayoutComponentBase
-<ErrorBoundary>
-    <ChildContent>
-        <div class="min-h-screen cartoon-bg flex flex-col">
-            <AppBar/>
-            <main class="pt-16 flex-1">
-                @Body
-            </main>
-            <Footer/>
-        </div>
-    </ChildContent>
-    <ErrorContent>
-        <div class="min-h-screen cartoon-bg flex flex-col">
-            <AppBar/>
-            <main class="pt-16 flex-1">
-                @Body
-            </main>
-            <Footer/>
-        </div>
-    </ErrorContent>
-</ErrorBoundary>
+
+@if (ResponsiveService.IsMobile)
+{
+    <MobileLayout>
+        @Body
+    </MobileLayout>
+}
+else if (ResponsiveService.IsTablet)
+{
+    <TabletLayout>
+        @Body
+    </TabletLayout>
+}
+else
+{
+    <ErrorBoundary>
+        <ChildContent>
+            <div class="min-h-screen cartoon-bg flex flex-col">
+                <AppBar/>
+                <main class="pt-16 flex-1">
+                    @Body
+                </main>
+                <Footer/>
+            </div>
+        </ChildContent>
+        <ErrorContent>
+            <div class="min-h-screen cartoon-bg flex flex-col">
+                <AppBar/>
+                <main class="pt-16 flex-1">
+                    @Body
+                </main>
+                <Footer/>
+            </div>
+        </ErrorContent>
+    </ErrorBoundary>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ResponsiveService.InitializeAsync();
+        ResponsiveService.OnBreakpointChanged += StateHasChanged;
+        StateHasChanged(); // Force initial render
+    }
+
+    public void Dispose()
+    {
+        ResponsiveService.OnBreakpointChanged -= StateHasChanged;
+    }
+}

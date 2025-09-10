@@ -1,0 +1,28 @@
+@using TomAndJerry.Component
+@inherits LayoutComponentBase
+
+<ErrorBoundary>
+    <ChildContent>
+        <div class="min-h-screen cartoon-bg flex flex-col">
+            <!-- Tablet App Bar -->
+            <TabletAppBar />
+            <main class="pt-16 flex-1">
+                @ChildContent
+            </main>
+            <TabletFooter />
+        </div>
+    </ChildContent>
+    <ErrorContent>
+        <div class="min-h-screen cartoon-bg flex flex-col">
+            <TabletAppBar />
+            <main class="pt-16 flex-1">
+                @ChildContent
+            </main>
+            <TabletFooter />
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

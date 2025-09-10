@@ -1,0 +1,168 @@
+@using TomAndJerry.Services
+@inject IStateService StateService
+
+<footer class="tom-jerry-footer mt-auto">
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Tablet Footer Content -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Brand Section -->
+            <div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+                    <div class="tom-character">
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden ring-3 ring-white/20 shadow-xl bg-gradient-to-br from-orange-400 to-orange-600 p-1">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover rounded-xl" AutoRefresh="true" RefreshIntervalSeconds="15" />
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <h3 class="text-4xl font-bold text-white font-comic cartoon-text mb-2">
+                            Tom & Jerry
+                        </h3>
+                        <p class="text-white/90 text-base font-medium">
+                            Classic Cartoon Collection
+                        </p>
+                    </div>
+                </div>
+                <p class="text-white/80 text-base leading-relaxed font-comic max-w-md">
+                    The timeless cat and mouse chase that has entertained generations. 
+                    Watch your favorite episodes and collect adorable stickers in this interactive experience!
+                </p>
+            </div>
+
+            <!-- Navigation Links -->
+            <div>
+                <h4 class="text-2xl font-bold text-white font-comic cartoon-text mb-4 flex items-center justify-center md:justify-start">
+                    <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                    Explore
+                </h4>
+                <nav class="space-y-2" role="navigation" aria-label="Footer navigation">
+                    <button @onclick="GoToHomePage" 
+                            class="group flex items-center w-full text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-lg hover:translate-x-2 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+                            🎬
+                        </span>
+                        <span class="group-hover:font-semibold transition-all duration-300">All Episodes</span>
+                    </button>
+                    <button @onclick="GoToStickers" 
+                            class="group flex items-center w-full text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-lg hover:translate-x-2 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+                            🎭
+                        </span>
+                        <span class="group-hover:font-semibold transition-all duration-300">Sticker Gallery</span>
+                    </button>
+                    <button @onclick="GoToSearch" 
+                            class="group flex items-center w-full text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-lg hover:translate-x-2 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+                            🔍
+                        </span>
+                        <span class="group-hover:font-semibold transition-all duration-300">Search Episodes</span>
+                    </button>
+                    <button @onclick="GoToQuiz" 
+                            class="group flex items-center w-full text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-lg hover:translate-x-2 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+                            🧠
+                        </span>
+                        <span class="group-hover:font-semibold transition-all duration-300">Quiz</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mb-6">
+            <h4 class="text-2xl font-bold text-white font-comic cartoon-text mb-4 text-center">
+                <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                Statistics
+            </h4>
+            <div class="grid grid-cols-3 gap-4">
+                @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
+                {
+                    <div class="tablet-stat-card">
+                        <div class="h-6 bg-white/20 rounded w-16 mb-2 skeleton animate-pulse"></div>
+                        <div class="text-sm text-white/70 font-comic">Episodes Available</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="tablet-stat-card">
+                        <div class="text-2xl font-bold text-white font-cartoon mb-1">@StateService.CurrentVideos.Count()</div>
+                        <div class="text-sm text-white/70 font-comic">Episodes Available</div>
+                    </div>
+                }
+                <div class="tablet-stat-card">
+                    <div class="text-2xl font-bold text-white font-cartoon mb-1">24</div>
+                    <div class="text-sm text-white/70 font-comic">Stickers to Collect</div>
+                </div>
+                <div class="tablet-stat-card">
+                    <div class="text-2xl font-bold text-white font-cartoon mb-1">∞</div>
+                    <div class="text-sm text-white/70 font-comic">Hours of Fun</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="border-t border-white/20 pt-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <div class="jerry-character">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-white/20 shadow-lg bg-gradient-to-br from-blue-400 to-blue-600 p-0.5">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover rounded-lg" AutoRefresh="true" RefreshIntervalSeconds="18" />
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <p class="text-white/70 text-sm font-comic font-medium">
+                            © 2024 Educational Project
+                        </p>
+                        <p class="text-white/60 text-xs font-comic">
+                            Made with ❤️ for learning purposes
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3 text-xs">
+                    <div class="flex items-center space-x-1 text-slate-600">
+                        <div class="w-1 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
+                        <span class="font-comic">Tom & Jerry © Warner Bros.</span>
+                    </div>
+                    <div class="flex items-center space-x-1 text-slate-600">
+                        <div class="w-1 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
+                        <span class="font-comic">Blazor WebAssembly</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+@code {
+    [Inject] private NavigationManager nav { get; set; } = default!;
+
+    void GoToHomePage()
+    {
+        nav.NavigateTo("");
+    }
+    
+    void GoToStickers()
+    {
+        nav.NavigateTo("stickers");
+    }
+
+    void GoToSearch()
+    {
+        nav.NavigateTo("Search/");
+    }
+
+    void GoToQuiz()
+    {
+        nav.NavigateTo("quiz");
+    }
+
+    protected override void OnInitialized()
+    {
+        StateService.OnStateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnStateChanged -= StateHasChanged;
+    }
+}

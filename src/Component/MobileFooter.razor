@@ -1,0 +1,164 @@
+@using TomAndJerry.Services
+@inject IStateService StateService
+
+<footer class="tom-jerry-footer mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Mobile Footer Content -->
+        <div class="space-y-6">
+            <!-- Brand Section -->
+            <div class="text-center">
+                <div class="flex flex-col items-center space-y-4 mb-4">
+                    <div class="tom-character">
+                        <div class="w-16 h-16 rounded-2xl overflow-hidden ring-3 ring-white/20 shadow-xl bg-gradient-to-br from-orange-400 to-orange-600 p-1">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover rounded-xl" AutoRefresh="true" RefreshIntervalSeconds="15" />
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-white font-comic cartoon-text mb-1">
+                            Tom & Jerry
+                        </h3>
+                        <p class="text-white/90 text-sm font-medium">
+                            Classic Cartoon Collection
+                        </p>
+                    </div>
+                </div>
+                <p class="text-white/80 text-sm leading-relaxed font-comic max-w-sm mx-auto">
+                    The timeless cat and mouse chase that has entertained generations. 
+                    Watch your favorite episodes and collect adorable stickers!
+                </p>
+            </div>
+
+            <!-- Navigation Links -->
+            <div>
+                <h4 class="text-xl font-bold text-white font-comic cartoon-text mb-3 text-center">
+                    <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                    Explore
+                </h4>
+                <nav class="grid grid-cols-2 gap-2" role="navigation" aria-label="Footer navigation">
+                    <button @onclick="GoToHomePage" 
+                            class="flex items-center space-x-2 text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-sm hover:translate-x-1 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-6 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center text-xs">
+                            🎬
+                        </span>
+                        <span class="text-xs">Episodes</span>
+                    </button>
+                    <button @onclick="GoToStickers" 
+                            class="flex items-center space-x-2 text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-sm hover:translate-x-1 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-6 h-6 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center text-xs">
+                            🎭
+                        </span>
+                        <span class="text-xs">Stickers</span>
+                    </button>
+                    <button @onclick="GoToSearch" 
+                            class="flex items-center space-x-2 text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-sm hover:translate-x-1 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center text-xs">
+                            🔍
+                        </span>
+                        <span class="text-xs">Search</span>
+                    </button>
+                    <button @onclick="GoToQuiz" 
+                            class="flex items-center space-x-2 text-slate-800 hover:text-slate-900 transition-all duration-300 font-comic text-sm hover:translate-x-1 p-2 rounded-lg hover:bg-white/10">
+                        <span class="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-xs">
+                            🧠
+                        </span>
+                        <span class="text-xs">Quiz</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Stats Section -->
+            <div>
+                <h4 class="text-xl font-bold text-white font-comic cartoon-text mb-3 text-center">
+                    <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                    Statistics
+                </h4>
+                <div class="grid grid-cols-3 gap-2">
+                    @if (StateService.IsLoading || !StateService.CurrentVideos.Any())
+                    {
+                        <div class="mobile-stat-card">
+                            <div class="h-4 bg-white/20 rounded w-8 mb-1 skeleton animate-pulse"></div>
+                            <div class="text-xs text-white/70 font-comic">Episodes</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mobile-stat-card">
+                            <div class="text-lg font-bold text-white font-cartoon">@StateService.CurrentVideos.Count()</div>
+                            <div class="text-xs text-white/70 font-comic">Episodes</div>
+                        </div>
+                    }
+                    <div class="mobile-stat-card">
+                        <div class="text-lg font-bold text-white font-cartoon">24</div>
+                        <div class="text-xs text-white/70 font-comic">Stickers</div>
+                    </div>
+                    <div class="mobile-stat-card">
+                        <div class="text-lg font-bold text-white font-cartoon">∞</div>
+                        <div class="text-xs text-white/70 font-comic">Fun</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="border-t border-white/20 mt-4 pt-4">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <div class="jerry-character">
+                        <div class="w-8 h-8 rounded-xl overflow-hidden ring-2 ring-white/20 shadow-lg bg-gradient-to-br from-blue-400 to-blue-600 p-0.5">
+                            <RandomSticker Category="classic" CssClass="w-full h-full" ImageCssClass="w-full h-full object-cover rounded-lg" AutoRefresh="true" RefreshIntervalSeconds="18" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-white/70 text-xs font-comic font-medium">
+                            © 2024 Educational Project
+                        </p>
+                        <p class="text-white/60 text-xs font-comic">
+                            Made with ❤️ for learning
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+                    <div class="flex items-center space-x-1 text-slate-600">
+                        <div class="w-1 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
+                        <span class="font-comic">Tom & Jerry © Warner Bros.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+@code {
+    [Inject] private NavigationManager nav { get; set; } = default!;
+
+    void GoToHomePage()
+    {
+        nav.NavigateTo("");
+    }
+    
+    void GoToStickers()
+    {
+        nav.NavigateTo("stickers");
+    }
+
+    void GoToSearch()
+    {
+        nav.NavigateTo("Search/");
+    }
+
+    void GoToQuiz()
+    {
+        nav.NavigateTo("quiz");
+    }
+
+    protected override void OnInitialized()
+    {
+        StateService.OnStateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnStateChanged -= StateHasChanged;
+    }
+}
