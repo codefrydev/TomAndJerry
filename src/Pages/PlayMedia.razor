@@ -1,13 +1,152 @@
 ﻿@page "/playmedia/{videId}"
 @using TomAndJerry.Services
-@inject NavigationManager nav
-@inject IVideoService VideoService
-@inject IStateService StateService
-@inject IJSRuntime JS
+@using TomAndJerry.Component
 
 <PageTitle>@(currentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry") - Tom & Jerry</PageTitle>
 
-<div class="min-h-screen cartoon-bg">
+@* Render device-specific views *@
+@if (ResponsiveService.IsMobile)
+{
+    <PlayMediaMobile
+        CurrentVideo="@currentVideo"
+        EmbedUrl="@GetEmbeddableUrl(currentVideo?.VideoUrl ?? string.Empty)"
+        RandomVideos="@randomVideos"
+        IsLoadingMore="@isLoadingMore"
+        HasMoreVideos="@hasMoreVideos"
+        OnLoadMore="@LoadMoreVideos"
+        OnNavigateToVideo="@GoTOPage" />
+
+    @* Mobile comments *@
+    <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 mt-4">
+        <div class="p-4 sm:p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <h3 class="text-lg font-bold text-gray-900">Comments</h3>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">@GetRandomComments()</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-4 sm:space-x-8 px-4 sm:px-6">
+                    <button @onclick="SetTabRelated"
+                            class="@(activeTab == "related" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Related
+                    </button>
+                    <button @onclick="SetTabGiscus" 
+                            class="@(activeTab == "giscus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Giscus
+                    </button>
+                    <button @onclick="SetTabDisqusAsync" 
+                            class="@(activeTab == "disqus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Disqus
+                    </button>
+                </nav>
+            </div>
+            <div class="p-4 sm:p-6">
+                @if (activeTab == "giscus")
+                {
+                    <Giscus Term="@(currentVideo?.CommentName ?? "")"/>
+                }
+                else if (activeTab == "disqus")
+                {
+                    <div id="disqus_thread"></div>
+                }
+                else if (activeTab == "related")
+                {
+                    <div class="space-y-3">
+                        @foreach (var item in randomVideos)
+                        {
+                            <div @onclick="()=>GoTOPage(item)" class="cursor-pointer">
+                                <Thumbnail VideoModel="@item" />
+                            </div>
+                        }
+                        @if (hasMoreVideos)
+                        {
+                            <button @onclick="LoadMoreVideos" disabled="@isLoadingMore"
+                                    class="w-full px-4 py-2 bg-soft-blue hover:bg-cartoon-yellow text-amber-800 rounded-full font-bold font-comic transition-colors disabled:opacity-50">
+                                @(isLoadingMore ? "Loading..." : "Load more videos")
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+else if (ResponsiveService.IsTablet)
+{
+    <PlayMediaTablet
+        CurrentVideo="@currentVideo"
+        EmbedUrl="@GetEmbeddableUrl(currentVideo?.VideoUrl ?? string.Empty)"
+        RandomVideos="@randomVideos"
+        IsLoadingMore="@isLoadingMore"
+        HasMoreVideos="@hasMoreVideos"
+        OnLoadMore="@LoadMoreVideos"
+        OnNavigateToVideo="@GoTOPage" />
+
+    @* Tablet comments *@
+    <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 mt-4">
+        <div class="p-4 sm:p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <h3 class="text-lg font-bold text-gray-900">Comments</h3>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">@GetRandomComments()</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-4 sm:space-x-8 px-4 sm:px-6">
+                    <button @onclick="SetTabRelated"
+                            class="@(activeTab == "related" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Related
+                    </button>
+                    <button @onclick="SetTabGiscus" 
+                            class="@(activeTab == "giscus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Giscus
+                    </button>
+                    <button @onclick="SetTabDisqusAsync" 
+                            class="@(activeTab == "disqus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
+                        Disqus
+                    </button>
+                </nav>
+            </div>
+            <div class="p-4 sm:p-6">
+                @if (activeTab == "giscus")
+                {
+                    <Giscus Term="@(currentVideo?.CommentName ?? "")"/>
+                }
+                else if (activeTab == "disqus")
+                {
+                    <div id="disqus_thread"></div>
+                }
+                else if (activeTab == "related")
+                {
+                    <div class="space-y-3">
+                        @foreach (var item in randomVideos)
+                        {
+                            <div @onclick="()=>GoTOPage(item)" class="cursor-pointer">
+                                <Thumbnail VideoModel="@item" />
+                            </div>
+                        }
+                        @if (hasMoreVideos)
+                        {
+                            <button @onclick="LoadMoreVideos" disabled="@isLoadingMore"
+                                    class="w-full px-4 py-2 bg-soft-blue hover:bg-cartoon-yellow text-amber-800 rounded-full font-bold font-comic transition-colors disabled:opacity-50">
+                                @(isLoadingMore ? "Loading..." : "Load more videos")
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+
+<div class="cartoon-bg">
     <div id="playmedia-main-container" class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-2 sm:py-4 lg:py-6">
         <div id="playmedia-grid" class="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <!-- Main Content Area -->
@@ -188,11 +327,11 @@
                         <div>
                             <div class="border-b border-gray-200">
                                 <nav class="flex space-x-4 sm:space-x-8 px-4 sm:px-6">
-                                    <button @onclick="@(() => { activeTab = "giscus"; StateHasChanged(); })" 
+                                    <button @onclick="SetTabGiscus" 
                                             class="@(activeTab == "giscus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
                                         Giscus
                                     </button>
-                                    <button @onclick="@(async () => { activeTab = "disqus"; await LoadGiscud(currentVideo?.CommentName ?? ""); StateHasChanged(); })" 
+                                    <button @onclick="SetTabDisqusAsync" 
                                             class="@(activeTab == "disqus" ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-700") py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors min-h-[44px]">
                                         Disqus
                                     </button>
@@ -280,8 +419,5 @@
             </div>
         </div>
     </div>
-</div>
-
-@code
-{
+    </div>
 }

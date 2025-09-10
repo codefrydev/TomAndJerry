@@ -1,11 +1,18 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TomAndJerry.Model;
+using TomAndJerry.Services;
 
 namespace TomAndJerry.Pages;
 
 public partial class PlayMedia : IDisposable
 {
+    [Inject] private NavigationManager nav { get; set; } = default!;
+    [Inject] private IVideoService VideoService { get; set; } = default!;
+    [Inject] private IStateService StateService { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+    [Inject] private IResponsiveService ResponsiveService { get; set; } = default!;
+
     bool show = false;
     string activeTab = "giscus";
     [Parameter] public string VideId { get; set; } = string.Empty;
@@ -16,10 +23,31 @@ public partial class PlayMedia : IDisposable
     private int videosPerLoad = 8;
     private bool isLoadingMore = false;
     private bool hasMoreVideos = true;
+    private bool _responsiveInitialized = false;
+    private bool _defaultTabApplied = false;
 
     private void GoTOPage(Video video)
     {
         nav.NavigateTo($"playmedia/{video.Id}");
+    }
+
+    private void SetTabGiscus()
+    {
+        activeTab = "giscus";
+        StateHasChanged();
+    }
+
+    private async Task SetTabDisqusAsync()
+    {
+        activeTab = "disqus";
+        await LoadGiscud(currentVideo?.CommentName ?? string.Empty);
+        StateHasChanged();
+    }
+
+    private void SetTabRelated()
+    {
+        activeTab = "related";
+        StateHasChanged();
     }
 
     async Task LoadGiscud(string id)
@@ -36,6 +64,7 @@ public partial class PlayMedia : IDisposable
     protected override async Task OnInitializedAsync()
     {
         StateService.OnStateChanged += StateHasChanged;
+        ResponsiveService.OnBreakpointChanged += OnBreakpointChangedHandler;
         await LoadVideoData();
     }
     
@@ -61,11 +90,40 @@ public partial class PlayMedia : IDisposable
             randomVideos.AddRange(initialVideos);
             
             show = false;
-            activeTab = "giscus";
+            var preferRelated = ResponsiveService.IsMobile || ResponsiveService.IsTablet;
+            if (!preferRelated)
+            {
+                try
+                {
+                    preferRelated = await ResponsiveService.IsMobileAsync() || await ResponsiveService.IsTabletAsync();
+                }
+                catch
+                {
+                }
+            }
+            activeTab = preferRelated ? "related" : "giscus";
         }
         finally
         {
             await StateService.SetLoadingStateAsync(false);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_responsiveInitialized)
+        {
+            try
+            {
+                await ResponsiveService.InitializeAsync();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                _responsiveInitialized = true;
+            }
         }
     }
 
@@ -118,6 +176,17 @@ public partial class PlayMedia : IDisposable
     public void Dispose()
     {
         StateService.OnStateChanged -= StateHasChanged;
+        ResponsiveService.OnBreakpointChanged -= OnBreakpointChangedHandler;
+    }
+
+    private void OnBreakpointChangedHandler()
+    {
+        if (!_defaultTabApplied && (ResponsiveService.IsMobile || ResponsiveService.IsTablet))
+        {
+            activeTab = "related";
+            _defaultTabApplied = true;
+        }
+        InvokeAsync(StateHasChanged);
     }
     
     private string GetRandomViews()

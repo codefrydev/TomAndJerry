@@ -1,0 +1,63 @@
+@using TomAndJerry.Model
+
+@* A simplified PlayMedia view optimized for mobile *@
+<div class="cartoon-bg">
+    <div class="max-w-7xl mx-auto px-2 py-2">
+        <div class="space-y-3">
+            <!-- Video Player -->
+            <div class="relative bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-jerry-brown">
+                <div class="video-container">
+                    <iframe src="@EmbedUrl"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            key="@CurrentVideo?.Id"
+                            class="w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="tom-jerry-card p-3">
+                <h1 class="text-xl font-bold font-cartoon text-amber-800 leading-tight cartoon-text">
+                    @(CurrentVideo?.CommentName?.Substring(6) ?? "Tom & Jerry Episode")
+                </h1>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap items-center gap-2">
+                <button class="flex items-center justify-center px-3 py-2 bg-soft-blue rounded-full font-bold font-comic text-amber-800 min-h-[44px] min-w-[44px]">
+                    👍 Like
+                </button>
+                <button class="flex items-center justify-center px-3 py-2 bg-soft-red rounded-full font-bold font-comic text-amber-800 min-h-[44px] min-w-[44px]">
+                    🔗 Share
+                </button>
+                <button class="flex items-center justify-center px-3 py-2 bg-soft-yellow rounded-full font-bold font-comic text-amber-800 min-h-[44px] min-w-[44px]">
+                    📌 Save
+                </button>
+            </div>
+
+            <!-- Description -->
+            <div class="bg-white rounded-xl p-3 shadow-lg border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Description</h3>
+                <p class="text-sm text-gray-700 leading-relaxed">
+                    @(CurrentVideo?.Description ?? "Classic Tom & Jerry episode featuring the timeless rivalry between the clever mouse Jerry and the determined cat Tom.")
+                </p>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Video? CurrentVideo { get; set; }
+    [Parameter] public string EmbedUrl { get; set; } = string.Empty;
+    [Parameter] public List<Video> RandomVideos { get; set; } = new();
+    [Parameter] public bool IsLoadingMore { get; set; }
+    [Parameter] public bool HasMoreVideos { get; set; }
+    [Parameter] public EventCallback OnLoadMore { get; set; }
+    [Parameter] public EventCallback<Video> OnNavigateToVideo { get; set; }
+}
+
+
