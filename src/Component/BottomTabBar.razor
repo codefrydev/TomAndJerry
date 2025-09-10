@@ -1,0 +1,62 @@
+@inject NavigationManager nav
+
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-4">
+            <button @onclick="GoToHomePage"
+                    class="flex flex-col items-center justify-center py-2 text-xs font-comic @(IsActive("/") || IsActive("/playmedia/") ? "text-red-600" : "text-gray-600")">
+                <span class="text-lg">🎬</span>
+                <span>Episodes</span>
+            </button>
+            <button @onclick="GoToStickers"
+                    class="flex flex-col items-center justify-center py-2 text-xs font-comic @(IsActive("/stickers") ? "text-red-600" : "text-gray-600")">
+                <span class="text-lg">🎭</span>
+                <span>Stickers</span>
+            </button>
+            <button @onclick="GoToSearch"
+                    class="flex flex-col items-center justify-center py-2 text-xs font-comic @(IsActive("/Search") ? "text-red-600" : "text-gray-600")">
+                <span class="text-lg">🔍</span>
+                <span>Search</span>
+            </button>
+            <button @onclick="GoToQuiz"
+                    class="flex flex-col items-center justify-center py-2 text-xs font-comic @(IsActive("/quiz") ? "text-red-600" : "text-gray-600")">
+                <span class="text-lg">🧠</span>
+                <span>Quiz</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool IsActive(string path)
+    {
+        var uri = nav.Uri;
+        if (string.IsNullOrWhiteSpace(uri)) return false;
+        // Normalize trailing slashes for comparison
+        uri = uri.TrimEnd('/');
+        path = path.TrimEnd('/');
+        return uri.EndsWith(path, StringComparison.OrdinalIgnoreCase);
+    }
+
+    void GoToHomePage()
+    {
+        nav.NavigateTo("/");
+    }
+
+    void GoToStickers()
+    {
+        nav.NavigateTo("/stickers");
+    }
+
+    void GoToSearch()
+    {
+        nav.NavigateTo("/Search");
+    }
+
+    void GoToQuiz()
+    {
+        nav.NavigateTo("/quiz");
+    }
+}
+
+

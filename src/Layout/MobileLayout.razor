@@ -3,22 +3,22 @@
 
 <ErrorBoundary>
     <ChildContent>
-        <div class="min-h-screen cartoon-bg flex flex-col">
+        <div class="min-h-screen cartoon-bg flex flex-col pb-14">
             <!-- Mobile App Bar -->
             <MobileAppBar />
             <main class="pt-16 flex-1">
                 @ChildContent
             </main>
-            <MobileFooter />
+            <BottomTabBar />
         </div>
     </ChildContent>
     <ErrorContent>
-        <div class="min-h-screen cartoon-bg flex flex-col">
+        <div class="min-h-screen cartoon-bg flex flex-col pb-14">
             <MobileAppBar />
             <main class="pt-16 flex-1">
                 @ChildContent
             </main>
-            <MobileFooter />
+            <BottomTabBar />
         </div>
     </ErrorContent>
 </ErrorBoundary>
